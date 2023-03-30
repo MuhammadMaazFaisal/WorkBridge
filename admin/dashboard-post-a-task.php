@@ -26,7 +26,7 @@
 
 			<!-- Row -->
 			<div class="row">
-				<form id="add-task">
+				<form id="add-task" enctype="multipart/form-data">
 					<!-- Dashboard Box -->
 					<div class="col-xl-12">
 						<div class="dashboard-box margin-top-0">

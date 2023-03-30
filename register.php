@@ -1,5 +1,5 @@
 <?php
-	include 'layout/header.php';
+include 'layout/header.php';
 ?>
 
 <!-- Header Container
@@ -9,10 +9,10 @@
 	<!-- Header -->
 	<div id="header">
 		<div class="container">
-			
+
 			<!-- Left Side Content -->
 			<div class="left-side">
-				
+
 				<!-- Logo -->
 				<div id="logo">
 					<a href="index.html"><img src="images/logo.png" alt=""></a>
@@ -56,40 +56,32 @@
 					<span>Already have an account? <a href="login.php">Log In!</a></span>
 				</div>
 
-				<!-- Account Type -->
-				<div class="account-type">
-					<div>
-						<input type="radio" name="account-type-radio" id="freelancer-radio" class="account-type-radio" checked/>
-						<label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Freelancer</label>
-					</div>
-
-					<div>
-						<input type="radio" name="account-type-radio" id="employer-radio" class="account-type-radio"/>
-						<label for="employer-radio" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Employer</label>
-					</div>
-				</div>
-					
 				<!-- Form -->
-				<form method="post" id="register-account-form">
+				<form id="register-account-form" enctype="multipart/form-data">
+
+					<div class="input-with-icon-left">
+						<i class="icon-material-outline-person-pin"></i>
+						<input type="text" class="input-text with-border" name="name" id="name" placeholder="Full Name" required />
+					</div>
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>
-						<input type="text" class="input-text with-border" name="emailaddress-register" id="emailaddress-register" placeholder="Email Address" required/>
+						<input type="text" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
 					</div>
 
-					<div class="input-with-icon-left" title="Should be at least 8 characters long" data-tippy-placement="bottom">
+					<div class="input-with-icon-left" data-tippy-placement="bottom">
 						<i class="icon-material-outline-lock"></i>
-						<input type="password" class="input-text with-border" name="password-register" id="password-register" placeholder="Password" required/>
+						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required />
 					</div>
 
 					<div class="input-with-icon-left">
 						<i class="icon-material-outline-lock"></i>
-						<input type="password" class="input-text with-border" name="password-repeat-register" id="password-repeat-register" placeholder="Repeat Password" required/>
+						<input type="password" class="input-text with-border" name="password-repeat" id="password-repeat" placeholder="Repeat Password" required />
 					</div>
+
+
+					<!-- Button -->
+					<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit">Register <i class="icon-material-outline-arrow-right-alt"></i></button>
 				</form>
-				
-				<!-- Button -->
-				<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" form="login-form">Register <i class="icon-material-outline-arrow-right-alt"></i></button>
-				
 			</div>
 
 		</div>
@@ -101,6 +93,59 @@
 <div class="margin-top-70"></div>
 <!-- Spacer / End-->
 
+
+
 <?php
-	include 'layout/footer.php';
+include 'layout/footer.php';
 ?>
+<script>
+	$(document).on('submit', '#register-account-form', function(e) {
+		e.preventDefault();
+		var form = new FormData(this);
+		form.append('function', 'register');
+		password = $('#password').val();
+		password_repeat = $('#password-repeat').val();
+		if (password != password_repeat) {
+			Swal.fire({
+				title: 'Registration failed!',
+				text: 'Password does not match',
+				icon: 'error',
+				timer: 1000 // set the timer to 1 second
+			}).then(function() {
+				password = '';
+				password_repeat = '';
+			});
+			return false;
+		} else {
+			$.ajax({
+				url: 'include/functions.php',
+				type: 'POST',
+				data: form,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function(data) {
+					data = JSON.parse(data);
+					if (data.status == 'success') {
+						Swal.fire({
+							title: 'Registration successful!',
+							icon: 'success',
+							timer: 2000 // set the timer to 1 second
+						}).then(function() {
+							window.location.href = 'login.php';
+						});
+					} else {
+						Swal.fire({
+							title: 'Registration failed!',
+							text: data.message,
+							icon: 'error',
+							timer: 2000 // set the timer to 1 second
+						}).then(function() {
+							window.location.reload();
+						});
+					}
+				}
+			});
+		}
+	});
+</script>

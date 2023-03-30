@@ -1,5 +1,5 @@
 <?php
-	include 'layout/header.php';
+include 'layout/header.php';
 ?>
 
 <!-- Header Container
@@ -9,10 +9,10 @@
 	<!-- Header -->
 	<div id="header">
 		<div class="container">
-			
+
 			<!-- Left Side Content -->
 			<div class="left-side">
-				
+
 				<!-- Logo -->
 				<div id="logo">
 					<a href="index.html"><img src="images/logo.png" alt=""></a>
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
 
 <!-- Page Content
 ================================================== -->
@@ -55,24 +55,23 @@
 					<h3>We're glad to see you again!</h3>
 					<span>Don't have an account? <a href="register.php">Sign Up!</a></span>
 				</div>
-					
+
 				<!-- Form -->
-				<form method="post" id="login-form">
+				<form id="login-form" enctype="multipart/form-data">
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>
-						<input type="text" class="input-text with-border" name="emailaddress" id="emailaddress" placeholder="Email Address" required/>
+						<input type="text" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
 					</div>
 
 					<div class="input-with-icon-left">
 						<i class="icon-material-outline-lock"></i>
-						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required/>
+						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required />
 					</div>
-					<a href="#" class="forgot-password">Forgot Password?</a>
+
+
+					<!-- Button -->
+					<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit">Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
 				</form>
-				
-				<!-- Button -->
-				<button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" form="login-form">Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
-				
 			</div>
 
 		</div>
@@ -84,6 +83,50 @@
 <div class="margin-top-70"></div>
 <!-- Spacer / End-->
 
+
 <?php
-	include 'layout/footer.php';
+include 'layout/footer.php';
 ?>
+
+<script>
+	$(document).on('submit', '#login-form', function(e) {
+		e.preventDefault();
+		var form = new FormData(this);
+		form.append('function', 'login');
+		$.ajax({
+			url: 'include/functions.php',
+			type: 'POST',
+			data: form,
+			contentType: false,
+			cache: false,
+			processData: false,
+			success: function(data) {
+				data=JSON.parse(data);
+				if (data.status == 'success') {
+					Swal.fire({
+						icon: 'success',
+						title: 'Login Success',
+						showConfirmButton: false,
+						timer: 1500
+					}).then(function() {
+						if (data.type == 'admin') {
+							window.location.href = 'admin/dashboard.php';
+						} else {
+							window.location.href = 'browse-tasks.php';
+						}
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Login Failed',
+						showConfirmButton: false,
+						timer: 1500
+					}).then(function() {
+						window.location.reload();
+					});
+				}
+			}
+		});
+
+	})
+</script>
