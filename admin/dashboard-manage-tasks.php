@@ -162,3 +162,6 @@
 <!-- Wrapper / End -->
 
 <?php include 'layout/footer.php'; ?>
+</body>
+
+</html>

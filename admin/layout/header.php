@@ -12,6 +12,7 @@
 ================================================== -->
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="../css/colors/blue.css">
+<link href="../css/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body class="gray">

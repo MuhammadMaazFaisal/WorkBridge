@@ -195,6 +195,7 @@
 <script src="../js/magnific-popup.min.js"></script>
 <script src="../js/slick.min.js"></script>
 <script src="../js/custom.js"></script>
+<script src="../js/sweetalert2.min.js"></script>
 
 <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
 <script>
@@ -211,8 +212,5 @@ $('#snackbar-user-status label').click(function() {
 	}); 
 }); 
 </script>
-
-</body>
-</html>
 
 <?php include '../include/connection.php'; ?>

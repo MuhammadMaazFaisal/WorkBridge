@@ -146,7 +146,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xl-12">
-					© 2018 <strong>Hireo</strong>. All Rights Reserved.
+					© 2023 <strong>Developed by Muhammad Maaz Faisal</strong>. All Rights Reserved.
 				</div>
 			</div>
 		</div>
@@ -175,7 +175,7 @@
 <script src="js/magnific-popup.min.js"></script>
 <script src="js/slick.min.js"></script>
 <script src="js/custom.js"></script>
-<script src="js/sweetalert2/sweetalert2.min.js"></script>
+<script src="js/sweetalert2.min.js"></script>
 
 <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
 <script>
@@ -193,6 +193,3 @@
 	});
 </script>
 
-</body>
-
-</html>
