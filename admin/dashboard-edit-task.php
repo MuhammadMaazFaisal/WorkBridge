@@ -12,21 +12,21 @@
 
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
-				<h3>Post a Task</h3>
+				<h3>Edit Task</h3>
 
 				<!-- Breadcrumbs -->
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
 						<li><a href="#">Dashboard</a></li>
-						<li>Post a Task</li>
+						<li>Edit Task</li>
 					</ul>
 				</nav>
 			</div>
 
 			<!-- Row -->
 			<div class="row">
-				<form id="add-task" enctype="multipart/form-data">
+				<form id="edit-task" enctype="multipart/form-data">
 					<!-- Dashboard Box -->
 					<div class="col-xl-12">
 						<div class="dashboard-box margin-top-0">
@@ -152,11 +152,30 @@
 <script src="../js/chart.min.js"></script>
 <script>
 	$(document).ready(function() {
-		let today = new Date().toISOString().substr(0, 10);
-		let dateInputs = document.querySelectorAll("input[type='date']");
-		for (let i = 0; i < dateInputs.length; i++) {
-			dateInputs[i].value = today;
-		}
+        let urlParams = new URLSearchParams(window.location.search);
+		let projectId = urlParams.get('project_id');
+        $.ajax({
+				url: '../include/functions.php',
+				type: 'POST',
+				data:{
+                    "function": "GetTaskDetails",
+                    "id": projectId
+                },
+				success: function(data) {
+                    console.log(data);
+                    var data = JSON.parse(data);
+                    console.log(data);
+                    $("#p_name").val(data.data.name);
+                    $("#category").val(data.data.category);
+                    $("#date").val(data.data.deadline);
+                    $("#budget").val(data.data.budget);
+                    $("#description").val(data.data.description);
+                    for (let i = 0; i < data.skills.length; i++) {
+                        $("#skills-container").append('<span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + data.skills[i].name + '</span></span>');
+                    }
+                }
+            });
+        
 		
 		const myInput = document.getElementById("add-skills");
 		myInput.addEventListener("keydown", function(event) {
@@ -165,8 +184,10 @@
 			}
 		});
 	});
-	$(document).on('submit', '#add-task', function(e) {
+	$(document).on('submit', '#edit-task', function(e) {
 		e.preventDefault();
+        let urlParams = new URLSearchParams(window.location.search);
+		let projectId = urlParams.get('project_id');
 		var form = new FormData(this);
 		var skills = document.querySelectorAll('#skills-container .keyword-text');
 		if (skills.length > 0) {
@@ -174,7 +195,8 @@
 				form.append('skills[]', skill.textContent.trim());
 				console.log(skill.textContent.trim());
 			});
-			form.append('function', 'add-task');
+			form.append('function', 'UpdateTask');
+            form.append('id', projectId);
 			$.ajax({
 				url: '../include/functions.php',
 				type: 'POST',

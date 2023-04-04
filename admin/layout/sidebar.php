@@ -18,24 +18,21 @@
 			<div class="dashboard-nav">
 				<div class="dashboard-nav-inner">
 
-					<ul data-submenu-title="Start">
-						<li><a href="dashboard.php"><i class="icon-material-outline-dashboard"></i> Dashboard</a></li>
-						<li class="active-submenu"><a href="#"><i class="icon-material-outline-assignment"></i> Tasks</a>
-							<ul>
-								<li><a href="dashboard-manage-tasks.php">Manage Tasks <span class="nav-tag">2</span></a></li>
-								<li><a href="dashboard-manage-bidders.php">Manage Bidders</a></li>
-								<li><a href="dashboard-my-active-bids.php">My Active Bids <span class="nav-tag">4</span></a></li>
-								<li><a href="dashboard-post-a-task.php">Post a Task</a></li>
-							</ul>
-						</li>
-					</ul>
+					<li><a href="dashboard-manage-tasks.html">Tasks</a>
+						<ul class="dropdown-nav">
+							<li><a href="dashboard-manage-tasks.php">Manage Tasks</a></li>
+							<li><a href="dashboard-manage-bidders.php">Manage Bidders</a></li>
+							<li><a href="dashboard-my-active-bids.php">My Active Bids</a></li>
+							<li><a href="dashboard-post-a-task.php">Post a Task</a></li>
+						</ul>
+					</li>
 
 					<ul data-submenu-title="Account">
 						<li><a href="dashboard-settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
-						<li><a href="index-logged-out.html"><i class="icon-material-outline-power-settings-new"></i> Logout</a></li>
+						<li><a onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</a></li>
 					</ul>
 
-				</div>	
+				</div>
 			</div>
 			<!-- Navigation / End -->
 

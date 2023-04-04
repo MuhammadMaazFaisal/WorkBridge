@@ -146,7 +146,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xl-12">
-					© 2023 <strong>Developed by Muhammad Maaz Faisal</strong>. All Rights Reserved.
+				© 2023 <strong><a href="mailto:m.maazfaisal0301@gmail.com"> Developed by Muhammad Maaz Faisal</a></strong>. All Rights Reserved.
 				</div>
 			</div>
 		</div>

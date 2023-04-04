@@ -1,29 +1,30 @@
 <?php include 'layout/header.php'; ?>
+
 <!-- Dashboard Container -->
 <div class="dashboard-container">
 
-	include 'layout/sidebar.php'; ?>
+	<?php include 'layout/sidebar.php'; ?>
 
 
 	<!-- Dashboard Content
 	================================================== -->
 	<div class="dashboard-content-container" data-simplebar>
-		<div class="dashboard-content-inner" >
-			
+		<div class="dashboard-content-inner">
+
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
-				<h3>My Active Bids</h3>
+				<h3>My Active Tasks</h3>
 
 				<!-- Breadcrumbs -->
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
 						<li><a href="#">Dashboard</a></li>
-						<li>My Active Bids</li>
+						<li>My Active Tasks</li>
 					</ul>
 				</nav>
 			</div>
-	
+
 			<!-- Row -->
 			<div class="row">
 
@@ -33,116 +34,11 @@
 
 						<!-- Headline -->
 						<div class="headline">
-							<h3><i class="icon-material-outline-gavel"></i> Bids List</h3>
+							<h3><i class="icon-material-outline-assignment"></i> My Tasks</h3>
 						</div>
 
 						<div class="content">
-							<ul class="dashboard-box-list">
-								<li>
-									<!-- Job Listing -->
-									<div class="job-listing width-adjustment">
-
-										<!-- Job Listing Details -->
-										<div class="job-listing-details">
-
-											<!-- Details -->
-											<div class="job-listing-description">
-												<h3 class="job-listing-title"><a href="#">WordPress Guru Needed</a></h3>
-											</div>
-										</div>
-									</div>
-									
-									<!-- Task Details -->
-									<ul class="dashboard-task-info">
-										<li><strong>$40</strong><span>Hourly Rate</span></li>
-										<li><strong>2 Days</strong><span>Delivery Time</span></li>
-									</ul>
-
-									<!-- Buttons -->
-									<div class="buttons-to-right always-visible">
-										<a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Edit Bid" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-										<a href="#" class="button red ripple-effect ico" title="Cancel Bid" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
-									</div>
-								</li>
-								<li>
-									<!-- Job Listing -->
-									<div class="job-listing width-adjustment">
-
-										<!-- Job Listing Details -->
-										<div class="job-listing-details">
-
-											<!-- Details -->
-											<div class="job-listing-description">
-												<h3 class="job-listing-title"><a href="#">Build me a website in Angular JS</a></h3>
-											</div>
-										</div>
-									</div>
-									
-									<!-- Task Details -->
-									<ul class="dashboard-task-info">
-										<li><strong>$2,550</strong><span>Fixed price</span></li>
-										<li><strong>14 Days</strong><span>Delivery Time</span></li>
-									</ul>
-
-									<!-- Buttons -->
-									<div class="buttons-to-right always-visible">
-										<a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Edit Bid" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-										<a href="#" class="button red ripple-effect ico" title="Cancel Bid" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
-									</div>
-								</li>
-								<li>
-									<!-- Job Listing -->
-									<div class="job-listing width-adjustment">
-
-										<!-- Job Listing Details -->
-										<div class="job-listing-details">
-
-											<!-- Details -->
-											<div class="job-listing-description">
-												<h3 class="job-listing-title"><a href="#">Android and iOS React Appe</a></h3>
-											</div>
-										</div>
-									</div>
-									
-									<!-- Task Details -->
-									<ul class="dashboard-task-info">
-										<li><strong>$3,000</strong><span>Fixed Price</span></li>
-										<li><strong>21 Days</strong><span>Delivery Time</span></li>
-									</ul>
-
-									<!-- Buttons -->
-									<div class="buttons-to-right always-visible">
-										<a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Edit Bid" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-										<a href="#" class="button red ripple-effect ico" title="Cancel Bid" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
-									</div>
-								</li>
-								<li>
-									<!-- Job Listing -->
-									<div class="job-listing width-adjustment">
-
-										<!-- Job Listing Details -->
-										<div class="job-listing-details">
-
-											<!-- Details -->
-											<div class="job-listing-description">
-												<h3 class="job-listing-title"><a href="#">Write Simple Python Script</a></h3>
-											</div>
-										</div>
-									</div>
-									
-									<!-- Task Details -->
-									<ul class="dashboard-task-info">
-										<li><strong>$30</strong><span>Hourly Rate</span></li>
-										<li><strong>1 Day</strong><span>Delivery Time</span></li>
-									</ul>
-
-									<!-- Buttons -->
-									<div class="buttons-to-right always-visible">
-										<a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Edit Bid" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-										<a href="#" class="button red ripple-effect ico" title="Cancel Bid" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
-									</div>
-								</li>
-
+							<ul id="tasks" class="dashboard-box-list">
 							</ul>
 						</div>
 					</div>
@@ -151,37 +47,7 @@
 			</div>
 			<!-- Row / End -->
 
-			<!-- Footer -->
-			<div class="dashboard-footer-spacer"></div>
-			<div class="small-footer margin-top-15">
-				<div class="small-footer-copyrights">
-					© 2018 <strong>Hireo</strong>. All Rights Reserved.
-				</div>
-				<ul class="footer-social-links">
-					<li>
-						<a href="#" title="Facebook" data-tippy-placement="top">
-							<i class="icon-brand-facebook-f"></i>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Twitter" data-tippy-placement="top">
-							<i class="icon-brand-twitter"></i>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Google Plus" data-tippy-placement="top">
-							<i class="icon-brand-google-plus-g"></i>
-						</a>
-					</li>
-					<li>
-						<a href="#" title="LinkedIn" data-tippy-placement="top">
-							<i class="icon-brand-linkedin-in"></i>
-						</a>
-					</li>
-				</ul>
-				<div class="clearfix"></div>
-			</div>
-			<!-- Footer / End -->
+			<?php include 'layout/footer-content.php'; ?>
 
 		</div>
 	</div>
@@ -193,8 +59,77 @@
 </div>
 <!-- Wrapper / End -->
 
-
 <?php include 'layout/footer.php'; ?>
+
+<script>
+	function TaskStatusChange(id){
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {
+				"function" : "TaskStatusChange",
+				"id" : id
+			},
+			success: function(data) {
+				console.log(data);
+				data = JSON.parse(data);
+				console.log(data);
+				if (data.status == 'success') {
+					Swal.fire({
+						title: 'Success!',
+						text: data.message,
+						icon: 'success',
+						confirmButtonText: 'Ok'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.reload();
+						}
+					})
+				}
+			}
+		});
+	}
+	$(document).ready(function() {
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {
+				"function" : "GetActiveTasks"
+			},
+			success: function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				if (data.status == 'success') {
+					var tasks = document.getElementById('tasks');
+					for (var i = 0; i < data.data.length; i++) {
+						tasks.innerHTML+=`<li>
+									<div class="freelancer-overview manage-candidates">
+										<div class="freelancer-overview-inner">
+											<div class="freelancer-name" style="margin-left: 0px !important;">
+												<h4><a href="#">${data.data[i].name}</h4>
+												<span class="freelancer-detail-item"><i class="icon-feather-calendar"></i>Date Posted: <span> ${new Date(data.data[i].date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span></span>
+												<ul class="dashboard-task-info bid-info">
+													<li><strong>${data.data[i].bids} Bids</strong><span>Bids</span></li>
+													<li><strong>$${data.data[i].budget}</strong><span>Price</span></li>
+													<li><strong> ${new Date(data.data[i].deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</strong><span>Deadline</span></li>
+													<li><strong>${data.data[i].status}</strong><span>Status</span></li>
+												</ul>
+											<div class="buttons-to-right always-visible">
+												<a href="dashboard-manage-bidders.php?project_id=${data.data[i].id}" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Manage Bidders </a>
+												<a href="dashboard-edit-task.php?project_id=${data.data[i].id}" class="button gray ripple-effect ico" title="Edit" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+												<a onclick="TaskStatusChange(${data.data[i].id})" class="button gray ripple-effect ico" title="Remove" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+											</div>
+											</div>
+										</div>
+									</div>
+								</li>`;
+					}
+				}
+			}
+		});
+	});
+</script>
+
 </body>
 
 </html>

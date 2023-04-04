@@ -64,10 +64,13 @@ include 'layout/header.php';
 						<input type="text" class="input-text with-border" name="name" id="name" placeholder="Full Name" required />
 					</div>
 					<div class="input-with-icon-left">
-						<i class="icon-material-baseline-mail-outline"></i>
-						<input type="text" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
+						<i class="icon-feather-phone"></i>
+						<input type="text" title="+919876543210" class="input-text with-border" name="phone" id="phone" placeholder="Phone Number" required />
 					</div>
-
+					<div class="input-with-icon-left">
+						<i class="icon-material-baseline-mail-outline"></i>
+						<input type="email" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
+					</div>
 					<div class="input-with-icon-left" data-tippy-placement="bottom">
 						<i class="icon-material-outline-lock"></i>
 						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required />
@@ -105,47 +108,59 @@ include 'layout/footer.php';
 		form.append('function', 'register');
 		password = $('#password').val();
 		password_repeat = $('#password-repeat').val();
-		if (password != password_repeat) {
+		phone = $('#phone').val();
+		pattern = /^\d{12}$/;
+		if (!pattern.test(phone)) {
 			Swal.fire({
 				title: 'Registration failed!',
-				text: 'Password does not match',
+				text: 'Phone number is not valid',
 				icon: 'error',
-				timer: 1000 // set the timer to 1 second
-			}).then(function() {
-				password = '';
-				password_repeat = '';
+				timer: 5000 // set the timer to 1 second
 			});
-			return false;
 		} else {
-			$.ajax({
-				url: 'include/functions.php',
-				type: 'POST',
-				data: form,
-				contentType: false,
-				cache: false,
-				processData: false,
-				success: function(data) {
-					data = JSON.parse(data);
-					if (data.status == 'success') {
-						Swal.fire({
-							title: 'Registration successful!',
-							icon: 'success',
-							timer: 2000 // set the timer to 1 second
-						}).then(function() {
-							window.location.href = 'login.php';
-						});
-					} else {
-						Swal.fire({
-							title: 'Registration failed!',
-							text: data.message,
-							icon: 'error',
-							timer: 2000 // set the timer to 1 second
-						}).then(function() {
-							window.location.reload();
-						});
+			if (password != password_repeat) {
+				Swal.fire({
+					title: 'Registration failed!',
+					text: 'Password does not match',
+					icon: 'error',
+					timer: 5000 // set the timer to 1 second
+				}).then((result) => {
+					if (result.isConfirmed) {
+						password = '';
+						password_repeat = '';
 					}
-				}
-			});
+				});
+			} else {
+				$.ajax({
+					url: 'include/functions.php',
+					type: 'POST',
+					data: form,
+					contentType: false,
+					cache: false,
+					processData: false,
+					success: function(data) {
+						data = JSON.parse(data);
+						if (data.status == 'success') {
+							Swal.fire({
+								title: 'Registration successful!',
+								icon: 'success',
+								timer: 2000 // set the timer to 1 second
+							}).then(function() {
+								window.location.href = 'login.php';
+							});
+						} else {
+							Swal.fire({
+								title: 'Registration failed!',
+								text: data.message,
+								icon: 'error',
+								timer: 2000 // set the timer to 1 second
+							}).then(function() {
+								window.location.reload();
+							});
+						}
+					}
+				});
+			}
 		}
 	});
 </script>

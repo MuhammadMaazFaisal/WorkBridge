@@ -199,6 +199,18 @@
 
 <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
 <script>
+	function Logout(){
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {function: 'Logout'},
+			success: function(data){
+				if(data == 'success'){
+					window.location.href = '../login.php';
+				}
+			}
+		});
+	}
 // Snackbar for user status switcher
 $('#snackbar-user-status label').click(function() { 
 	Snackbar.show({

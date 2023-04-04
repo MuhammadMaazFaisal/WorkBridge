@@ -60,7 +60,7 @@ include 'layout/header.php';
 				<form id="login-form" enctype="multipart/form-data">
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>
-						<input type="text" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
+						<input type="email" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
 					</div>
 
 					<div class="input-with-icon-left">
@@ -101,7 +101,8 @@ include 'layout/footer.php';
 			cache: false,
 			processData: false,
 			success: function(data) {
-				data=JSON.parse(data);
+				console.log(data);
+				data = JSON.parse(data);
 				if (data.status == 'success') {
 					Swal.fire({
 						icon: 'success',
@@ -109,7 +110,7 @@ include 'layout/footer.php';
 						showConfirmButton: false,
 						timer: 1500
 					}).then(function() {
-						if (data.type == 'admin') {
+						if (data.user_type == 'admin') {
 							window.location.href = 'admin/dashboard.php';
 						} else {
 							window.location.href = 'browse-tasks.php';
@@ -119,11 +120,14 @@ include 'layout/footer.php';
 					Swal.fire({
 						icon: 'error',
 						title: 'Login Failed',
-						showConfirmButton: false,
-						timer: 1500
-					}).then(function() {
-						window.location.reload();
-					});
+						text: data.message,
+						showConfirmButton: true,
+						timer: 5000
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.reload();
+						}
+					})
 				}
 			}
 		});
