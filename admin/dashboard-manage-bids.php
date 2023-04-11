@@ -12,14 +12,12 @@
 
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
-				<h3>Manage Bidders</h3>
-				<span class="margin-top-7">Bids for <span id="project-name" class="d-inline" style="color:#2a41e8;"></span></span>
-
+				<h3>Manage Bids</h3>
 				<!-- Breadcrumbs -->
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="dashboard.php">Dashboard</a></li>
-						<li>Manage Bidders</li>
+						<li>Manage Bids</li>
 					</ul>
 				</nav>
 			</div>
@@ -65,21 +63,19 @@
 	$(document).ready(function() {
 		let urlParams = new URLSearchParams(window.location.search);
 		let projectId = urlParams.get('project_id');
-		let projectName = document.getElementById('project-name');
 		$.ajax({
 			url: '../include/functions.php',
 			type: 'POST',
 			data: {
-				'function': 'GetProjectDetails',
-				'id': projectId
+				'function': 'GetAllBids'
 			},
 			success: function(response) {
+				console.log(response);
 				let data = JSON.parse(response);
 				console.log(data);
 				if (data.status == 'success') {
-					let bidder_count = document.getElementById('bidder-count').innerHTML = data.count;
+					let bidder_count = document.getElementById('bidder-count').innerHTML = data.count['count(*)'];	
 					let bidders = document.getElementById('bidders');
-					let project_name = document.getElementById('project-name').innerHTML = data.name.name;
 					for (let i = 0; i < data.data.length; i++) {
 						bidders.innerHTML += `
 						<li>
@@ -102,11 +98,11 @@
 						</li>`;
 					}
 				}else{
-					let project_name = document.getElementById('project-name').innerHTML = data.name.name;
 					let bidders = document.getElementById('bidders');
-					bidders.innerHTML = `<li>No Bidders Yet</li>`;	
-
+					bidders.innerHTML = `<li><h3>No Bidders</h3></li>`;
 				}
+
+
 			}
 		});
 

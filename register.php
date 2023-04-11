@@ -65,7 +65,7 @@ include 'layout/header.php';
 					</div>
 					<div class="input-with-icon-left">
 						<i class="icon-feather-phone"></i>
-						<input type="text" title="+919876543210" class="input-text with-border" name="phone" id="phone" placeholder="Phone Number" required />
+						<input type="text" title="+919876543210" class="input-text with-border" name="phone" id="phone" value="" placeholder="Phone Number" required />
 					</div>
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>

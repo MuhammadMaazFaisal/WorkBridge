@@ -13,14 +13,14 @@
 
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
-				<h3>Manage Tasks</h3>
+				<h3>My Active Tasks</h3>
 
 				<!-- Breadcrumbs -->
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
 						<li><a href="#">Dashboard</a></li>
-						<li>Manage Tasks</li>
+						<li>My Active Tasks</li>
 					</ul>
 				</nav>
 			</div>
@@ -94,10 +94,9 @@
 			url: '../include/functions.php',
 			type: 'POST',
 			data: {
-				"function" : "GetTasks"
+				"function" : "GetActiveTasks"
 			},
 			success: function(data) {
-				console.log(data);
 				data = JSON.parse(data);
 				console.log(data);
 				if (data.status == 'success') {
@@ -127,7 +126,7 @@
 					}
 				}else{
 					var tasks = document.getElementById('tasks');
-					tasks.innerHTML=`<li><h3>No Tasks</h3></li>`;
+					tasks.innerHTML=`<li><h3>No Active Tasks</h3></li>`;
 				}
 			}
 		});

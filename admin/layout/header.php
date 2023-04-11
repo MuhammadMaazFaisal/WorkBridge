@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="../css/style.css">
 	<link rel="stylesheet" href="../css/colors/blue.css">
 	<link href="../css/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
 </head>
 
@@ -76,8 +77,8 @@
 									</div>
 
 									<ul class="user-menu-small-nav">
-										<li><a href="dashboard.html"><i class="icon-material-outline-dashboard"></i> Dashboard</a></li>
-										<li><a href="dashboard-settings.html"><i class="icon-material-outline-settings"></i> Settings</a></li>
+										<li><a href="dashboard.php"><i class="icon-material-outline-dashboard"></i> Dashboard</a></li>
+										<li><a href="dashboard-settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
 										<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
 									</ul>
 

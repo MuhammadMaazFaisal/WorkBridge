@@ -23,6 +23,16 @@ if ($_POST['function'] == 'add-task') {
     UpdateProfile();
 } elseif ($_POST['function'] == 'Logout') {
     Logout();
+} elseif ($_POST['function'] == 'GetAllSkills') {
+    GetAllSkills();
+} elseif ($_POST['function'] == 'GetAllBids') {
+    GetAllBids();
+} elseif ($_POST['function'] == 'GetAllTasks') {
+    GetAllTasks();
+} elseif ($_POST['function'] == 'PlaceBid') {
+    PlaceBid();
+} elseif ($_POST['function'] == 'FilterTasks') {
+    FilterTasks();
 }
 
 function AddTask()
@@ -77,9 +87,14 @@ function AddTask()
         $p_id = $conn->lastInsertId();
         // Insert project skills into database
         foreach ($skills as $skill) {
-            $stmt1 = $conn->prepare("INSERT INTO project_skills (p_id, name) VALUES (:p_id, :name)");
+            $stmt2 = $conn->prepare("SELECT * FROM skills WHERE name=:name");
+            $stmt2->bindParam(':name', $skill);
+            $stmt2->execute();
+            $result = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $stmt1 = $conn->prepare("INSERT INTO project_skills (p_id, s_id) VALUES (:p_id, :s_id)");
             $stmt1->bindParam(':p_id', $p_id);
-            $stmt1->bindParam(':name', $skill);
+            $stmt1->bindParam(':s_id', $result['id']);
+
             if ($stmt1->execute()) {
                 $array['status'] = 'success';
                 $array['message'] = "Task submitted successfully.";
@@ -114,7 +129,7 @@ function Login()
     if ($result) {
         // If the user is found, check the password
         if (password_verify($_POST['password'], $result['password'])) {
-            $sql1 = "SELECT * FROM user_skills WHERE u_id=:u_id";
+            $sql1 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
             $stmt1 = $conn->prepare($sql1);
             $stmt1->bindParam(':u_id', $result['id']);
             $stmt1->execute();
@@ -181,7 +196,7 @@ function GetTasks()
 {
     include 'connection.php';
     $array = array();
-    $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE p_id = projects.id) as bids FROM projects ORDER BY date DESC";
+    $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE p_id = projects.id and bids.status='Interested') as bids FROM projects ORDER BY date DESC";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -227,7 +242,7 @@ function GetProjectDetails()
     $stmt->bindParam(':id', $_POST['id']);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $sql1 = "SELECT COUNT(*) FROM bids WHERE p_id = :p_id";
+    $sql1 = "SELECT COUNT(*) FROM bids WHERE p_id = :p_id AND status = 'Interested'";
     $stmt1 = $conn->prepare($sql1);
     $stmt1->bindParam(':p_id', $_POST['id']);
     $stmt1->execute();
@@ -246,6 +261,7 @@ function GetProjectDetails()
     } else {
         $array['status'] = 'error';
         $array['message'] = 'Get Project Details Failed';
+        $array['name'] = $result2;
     }
     echo json_encode($array);
 }
@@ -282,7 +298,8 @@ function TaskStatusChange()
     echo json_encode($array);
 }
 
-function GetTaskDetails(){
+function GetTaskDetails()
+{
     include 'connection.php';
     $array = array();
     $sql = "SELECT * FROM projects WHERE id=:id";
@@ -290,7 +307,7 @@ function GetTaskDetails(){
     $stmt->bindParam(':id', $_POST['id']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $sql1 = "SELECT * FROM project_skills WHERE p_id=:id";
+    $sql1 = "SELECT * FROM project_skills join skills on project_skills.s_id = skills.id WHERE project_skills.p_id=:id";
     $stmt1 = $conn->prepare($sql1);
     $stmt1->bindParam(':id', $_POST['id']);
     $stmt1->execute();
@@ -307,8 +324,9 @@ function GetTaskDetails(){
     echo json_encode($array);
 }
 
-function UpdateTask(){
-    
+function UpdateTask()
+{
+
     include 'connection.php';
     $array = array();
 
@@ -358,27 +376,30 @@ function UpdateTask(){
     }
 
     if ($stmt->execute()) {
+        $p_id = $_POST['id'];
         // Insert project skills into database
-        $stmt1 = $conn->prepare("DELETE FROM project_skills WHERE p_id=:p_id");
-        $stmt1->bindParam(':p_id', $_POST['id']);
-        $stmt1->execute();
         foreach ($skills as $skill) {
-            $stmt1 = $conn->prepare("INSERT INTO project_skills (p_id, name) VALUES (:p_id, :name)");
-            $stmt1->bindParam(':p_id', $id);
-            $stmt1->bindParam(':name', $skill);
+            $stmt2 = $conn->prepare("SELECT * FROM skills WHERE name=:name");
+            $stmt2->bindParam(':name', $skill);
+            $stmt2->execute();
+            $result = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $stmt1 = $conn->prepare("INSERT INTO project_skills (p_id, s_id) VALUES (:p_id, :s_id)");
+            $stmt1->bindParam(':p_id', $p_id);
+            $stmt1->bindParam(':s_id', $result['id']);
+
             if ($stmt1->execute()) {
                 $array['status'] = 'success';
-                $array['message'] = "Task Details Updated Successfully";
+                $array['message'] = "Task Updated successfully.";
             } else {
                 $array['status'] = 'error';
-                $array['message'] = "Task could not be updated, please try again.";
+                $array['message'] = "Task submission failed, please try again.";
                 echo json_encode($array);
                 die();
             }
         }
     } else {
         $array['status'] = 'error';
-        $array['message'] = "Task could not be updated, please try again.";
+        $array['message'] = "Task submission failed, please try again.";
         echo json_encode($array);
         die();
     }
@@ -387,7 +408,8 @@ function UpdateTask(){
     echo json_encode($array);
 }
 
-function GetUserDetails(){
+function GetUserDetails()
+{
     include 'connection.php';
     $array = array();
     $sql = "SELECT * FROM users WHERE id=:id";
@@ -395,9 +417,8 @@ function GetUserDetails(){
     $stmt->bindParam(':id', $_POST['id']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $sql1= "SELECT * FROM user_skills WHERE u_id=:id";
+    $sql1 = "SELECT * FROM skills";
     $stmt1 = $conn->prepare($sql1);
-    $stmt1->bindParam(':id', $_POST['id']);
     $stmt1->execute();
     if ($result) {
         $array['status'] = 'success';
@@ -411,7 +432,8 @@ function GetUserDetails(){
     echo json_encode($array);
 }
 
-function UpdateProfile(){
+function UpdateProfile()
+{
     include 'connection.php';
     $array = array();
     $id = $_POST['id'];
@@ -420,19 +442,53 @@ function UpdateProfile(){
     $phone = $_POST['phone'];
     $description = $_POST['description'];
     $skills = $_POST['skills'];
-    $stmt = $conn->prepare("UPDATE users SET name=:name, email=:email, phone=:phone, description=:description WHERE id=:id");
+    $password = $_POST['old-password'];
+    $newpassword = $_POST['new-password'];
+    $cpassword = $_POST['r-new-password'];
+    $sql = "SELECT * FROM users WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (count($result) > 0 && $cpassword != "") {
+        if (password_verify($password, $result['password'])) {
+            if ($newpassword == $cpassword) {
+                $password = password_hash($newpassword, PASSWORD_DEFAULT);
+            } else {
+                $array['status'] = 'error';
+                $array['message'] = "Password does not match";
+                echo json_encode($array);
+                die();
+            }
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Old Password is incorrect";
+            echo json_encode($array);
+            die();
+        }
+    }
+
+    $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, description=:description";
+    if ($password != "") {
+        $sql1 .= ", password=:password WHERE id=:id";
+        $stmt = $conn->prepare($sql1);
+        $stmt->bindParam(':password', $password);
+    } else {
+        $sql1 .= " WHERE id=:id";
+        $stmt = $conn->prepare($sql1);
+    }
+
+
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':phone', $phone);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
-        $stmt1 = $conn->prepare("DELETE FROM user_skills WHERE u_id=:u_id");
-        $stmt1->bindParam(':u_id', $id);
+        $stmt1 = $conn->prepare("DELETE FROM skills");
         $stmt1->execute();
         foreach ($skills as $skill) {
-            $stmt1 = $conn->prepare("INSERT INTO user_skills (u_id, name) VALUES (:u_id, :name)");
-            $stmt1->bindParam(':u_id', $id);
+            $stmt1 = $conn->prepare("INSERT INTO skills ( name) VALUES ( :name)");
             $stmt1->bindParam(':name', $skill);
             if ($stmt1->execute()) {
                 $array['status'] = 'success';
@@ -450,12 +506,171 @@ function UpdateProfile(){
         echo json_encode($array);
         die();
     }
-    
-    $array['phone'] = $phone;
+
+
+
     echo json_encode($array);
 }
 
-function Logout(){
+function Logout()
+{
     session_start();
     session_destroy();
+}
+
+function GetAllSkills()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT * FROM skills";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Skills Fetched Successfully';
+        $array['data'] = $result;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Skills could not be Fetched';
+    }
+    echo json_encode($array);
+}
+
+function GetAllBids()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT * FROM bids Join projects on bids.p_id=projects.id Join users on bids.u_id=users.id where bids.status='Interested' AND projects.status='Open'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql2 = "SELECT count(*) FROM bids Join projects on bids.p_id=projects.id where bids.status='Interested' AND projects.status='Open'";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Bids Fetched Successfully';
+        $array['data'] = $result;
+        $array['count'] = $stmt2->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Bids could not be Fetched';
+    }
+    echo json_encode($array);
+}
+
+function GetAllTasks()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT * FROM projects";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql2 = "SELECT * FROM project_skills JOIN skills ON project_skills.s_id=skills.id";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->execute();
+    $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Tasks Fetched Successfully';
+        $array['data'] = $result;
+        $array['skills'] = $result2;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Tasks could not be Fetched';
+    }
+    echo json_encode($array);
+}
+
+function PlaceBid()
+{
+    include 'connection.php';
+    $array = array();
+    $sql0 = "SELECT * FROM bids WHERE p_id=:p_id AND u_id=:u_id";
+    $stmt0 = $conn->prepare($sql0);
+    $stmt0->bindParam(':p_id', $_POST['p_id']);
+    $stmt0->bindParam(':u_id', $_POST['u_id']);
+    $stmt0->execute();
+    $result0 = $stmt0->fetch(PDO::FETCH_ASSOC);
+    if ($result0) {
+        if ($result0['status'] == 'Interested') {
+            $sql = "UPDATE bids SET status='Not Interested' WHERE p_id=:p_id AND u_id=:u_id";
+        } else {
+            $sql = "UPDATE bids SET status='Interested' WHERE p_id=:p_id AND u_id=:u_id";
+        }
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':p_id', $_POST['p_id']);
+        $stmt->bindParam(':u_id', $_POST['u_id']);
+        if ($stmt->execute()) {
+            $array['status'] = 'success';
+            $array['message'] = "Bid Status Changed from " . $result0['status'] . " to " . ($result0['status'] == 'Interested' ? 'Not Interested' : 'Interested');
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Bid could not be placed, please try again.";
+        }
+    } else {
+        $sql = "INSERT INTO bids (p_id, u_id) VALUES (:p_id, :u_id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':p_id', $_POST['p_id']);
+        $stmt->bindParam(':u_id', $_POST['u_id']);
+        if ($stmt->execute()) {
+            $array['status'] = 'success';
+            $array['message'] = "Bid Placed Successfully";
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Bid could not be placed, please try again.";
+        }
+    }
+    echo json_encode($array);
+}
+
+function FilterTasks()
+{
+    include 'connection.php';
+    $keywords = isset($_POST['keywords']) ? $_POST['keywords'] : '';
+    $skills = isset($_POST['skills']) ? $_POST['skills'] : array();
+    $categories = isset($_POST['category']) ? $_POST['category'] : array();
+
+    // Construct SQL query
+    $sql0="Select id from skills where name in ('".implode("','",$skills)."')";
+    $stmt0 = $conn->prepare($sql0);
+    $stmt0->execute();
+    $result0 = $stmt0->fetchAll(PDO::FETCH_ASSOC);
+    $skills=array();
+    foreach($result0 as $row){
+        array_push($skills,$row['id']);
+    }
+    $sql = 'SELECT id, name, category, budget, description, deadline, upload, status, date FROM projects WHERE 1';
+
+    if (!empty($keywords)) {
+        $sql .= ' AND (name LIKE "%' . $keywords . '%" OR description LIKE "%' . $keywords . '%")';
+    }
+
+    if (!empty($skills)) {
+        $sql .= ' AND id IN (SELECT p_id FROM project_skills WHERE s_id IN (' . implode(',', $skills) . '))';
+    }
+
+    if (!empty($categories)) {
+        $sql .= ' AND category IN ("' . implode('","', $categories) . '")';
+    }
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql2 = "SELECT * FROM project_skills JOIN skills ON project_skills.s_id=skills.id";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->execute();
+    $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Tasks Fetched Successfully';
+        $array['data'] = $result;
+        $array['skills'] = $result2;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Tasks could not be Fetched';
+    }
+    echo json_encode($array);
 }

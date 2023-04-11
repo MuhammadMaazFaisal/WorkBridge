@@ -42,7 +42,7 @@
 
 									<div class="col-xl-4">
 										<div class="submit-field">
-											<h5>Project Name</h5>
+											<h5>Task Name</h5>
 											<input id="p_name" name="p_name" type="text" class="with-border" placeholder="e.g. build me a website" required>
 										</div>
 									</div>
@@ -67,7 +67,7 @@
 
 									<div class="col-xl-4">
 										<div class="submit-field">
-											<h5>Date</h5>
+											<h5>Deadline</h5>
 											<div class="input-with-icon">
 												<div id="autocomplete-container">
 													<input id="date" name="date" class="with-border" type="date" placeholder="Anywhere">
@@ -92,27 +92,31 @@
 
 									<div class="col-xl-6">
 										<div class="submit-field">
-											<h5>What skills are required? <i class="help-icon" data-tippy-placement="right" title="Up to 5 skills that best describe your project"></i></h5>
+											<h5>Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
+
+											<!-- Skills List -->
 											<div class="keywords-container">
 												<div class="keyword-input-container">
-													<input id="add-skills" type="text" class="keyword-input with-border" placeholder="Add Skills" />
+													<select id="add-skills" class="keyword-input with-border custom-select">
+														<option value="">Select a skill...</option>
+													</select>
 													<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
 												</div>
-												<div class="keywords-list" id="skills-container"><!-- keywords go here --></div>
+												<div class="keywords-list" id="skills-container">
+												</div>
 												<div class="clearfix"></div>
 											</div>
-
 										</div>
 									</div>
 
 									<div class="col-xl-12">
 										<div class="submit-field">
-											<h5>Describe Your Project</h5>
-											<textarea cols="30" rows="5" id="description" name="description" class="with-border"></textarea>
+											<h5>Describe Your Task</h5>
+											<textarea cols="30" rows="5" id="description" name="description" class="with-border" required></textarea>
 											<div class="uploadButton margin-top-30">
 												<input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" name="upload" multiple />
 												<label class="uploadButton-button ripple-effect" for="upload">Upload Files</label>
-												<span class="uploadButton-file-name">Images or documents that might be helpful in describing your project</span>
+												<span class="uploadButton-file-name">Images or documents that might be helpful in describing your task</span>
 											</div>
 										</div>
 									</div>
@@ -141,7 +145,15 @@
 
 </div>
 <!-- Wrapper / End -->
-
+<style>
+	.selectize-input {
+    padding: 13px 10px !important;
+	height: 45px !important;
+}
+input[type="select-one"] {
+	height: 24px !important;
+}
+</style>
 
 <!-- Scripts
 ================================================== -->
@@ -152,16 +164,34 @@
 <script src="../js/chart.min.js"></script>
 <script>
 	$(document).ready(function() {
+		$('.custom-select').selectize({
+			sortField: 'text'
+		});
 		let today = new Date().toISOString().substr(0, 10);
 		let dateInputs = document.querySelectorAll("input[type='date']");
 		for (let i = 0; i < dateInputs.length; i++) {
 			dateInputs[i].value = today;
 		}
-		
-		const myInput = document.getElementById("add-skills");
-		myInput.addEventListener("keydown", function(event) {
-			if (event.key === "Enter") {
-				event.preventDefault();
+
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {
+				function: 'GetAllSkills'
+			},
+			success: function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				if (data.status == 'success') {
+					var add_skill = $('#add-skills')[0].selectize;
+					for (let i = 0; i < data.data.length; i++) {
+						var newOption = {
+							value: data.data[i]['name'],
+							text: data.data[i]['name']
+						};
+						add_skill.addOption(newOption);
+					}
+				}
 			}
 		});
 	});
@@ -215,85 +245,6 @@
 			})
 			return false;
 		}
-
-	});
-
-	Chart.defaults.global.defaultFontFamily = "Nunito";
-	Chart.defaults.global.defaultFontColor = '#888';
-	Chart.defaults.global.defaultFontSize = '14';
-
-	var ctx = document.getElementById('chart').getContext('2d');
-
-	var chart = new Chart(ctx, {
-		type: 'line',
-
-		// The data for our dataset
-		data: {
-			labels: ["January", "February", "March", "April", "May", "June"],
-			// Information about the dataset
-			datasets: [{
-				label: "Views",
-				backgroundColor: 'rgba(42,65,232,0.08)',
-				borderColor: '#2a41e8',
-				borderWidth: "3",
-				data: [196, 132, 215, 362, 210, 252],
-				pointRadius: 5,
-				pointHoverRadius: 5,
-				pointHitRadius: 10,
-				pointBackgroundColor: "#fff",
-				pointHoverBackgroundColor: "#fff",
-				pointBorderWidth: "2",
-			}]
-		},
-
-		// Configuration options
-		options: {
-
-			layout: {
-				padding: 10,
-			},
-
-			legend: {
-				display: false
-			},
-			title: {
-				display: false
-			},
-
-			scales: {
-				yAxes: [{
-					scaleLabel: {
-						display: false
-					},
-					gridLines: {
-						borderDash: [6, 10],
-						color: "#d8d8d8",
-						lineWidth: 1,
-					},
-				}],
-				xAxes: [{
-					scaleLabel: {
-						display: false
-					},
-					gridLines: {
-						display: false
-					},
-				}],
-			},
-
-			tooltips: {
-				backgroundColor: '#333',
-				titleFontSize: 13,
-				titleFontColor: '#fff',
-				bodyFontColor: '#fff',
-				bodyFontSize: 13,
-				displayColors: false,
-				xPadding: 10,
-				yPadding: 10,
-				intersect: false
-			}
-		},
-
 
 	});
 </script>

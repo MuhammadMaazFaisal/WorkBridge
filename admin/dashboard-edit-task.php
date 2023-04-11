@@ -92,16 +92,20 @@
 
 									<div class="col-xl-6">
 										<div class="submit-field">
-											<h5>What skills are required? <i class="help-icon" data-tippy-placement="right" title="Up to 5 skills that best describe your project"></i></h5>
+											<h5>Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
+
+											<!-- Skills List -->
 											<div class="keywords-container">
 												<div class="keyword-input-container">
-													<input id="add-skills" type="text" class="keyword-input with-border" placeholder="Add Skills" />
+													<select id="add-skills" class="keyword-input with-border custom-select">
+														<option value="">Select a skill...</option>
+													</select>
 													<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
 												</div>
-												<div class="keywords-list" id="skills-container"><!-- keywords go here --></div>
+												<div class="keywords-list" id="skills-container">
+												</div>
 												<div class="clearfix"></div>
 											</div>
-
 										</div>
 									</div>
 
@@ -123,7 +127,7 @@
 					</div>
 
 					<div class="col-xl-12">
-						<button type="submit" class="button ripple-effect big margin-top-30"><i class="icon-feather-plus"></i> Post a Task</button>
+						<button type="submit" class="button ripple-effect big margin-top-30"><i class="icon-feather-plus"></i> Update Task</button>
 					</div>
 				</form>
 
@@ -142,6 +146,16 @@
 </div>
 <!-- Wrapper / End -->
 
+<style>
+	.selectize-input {
+		padding: 13px 10px !important;
+		height: 45px !important;
+	}
+
+	input[type="select-one"] {
+		height: 24px !important;
+	}
+</style>
 
 <!-- Scripts
 ================================================== -->
@@ -152,41 +166,71 @@
 <script src="../js/chart.min.js"></script>
 <script>
 	$(document).ready(function() {
-        let urlParams = new URLSearchParams(window.location.search);
-		let projectId = urlParams.get('project_id');
-        $.ajax({
-				url: '../include/functions.php',
-				type: 'POST',
-				data:{
-                    "function": "GetTaskDetails",
-                    "id": projectId
-                },
-				success: function(data) {
-                    console.log(data);
-                    var data = JSON.parse(data);
-                    console.log(data);
-                    $("#p_name").val(data.data.name);
-                    $("#category").val(data.data.category);
-                    $("#date").val(data.data.deadline);
-                    $("#budget").val(data.data.budget);
-                    $("#description").val(data.data.description);
-                    for (let i = 0; i < data.skills.length; i++) {
-                        $("#skills-container").append('<span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + data.skills[i].name + '</span></span>');
-                    }
-                }
-            });
-        
-		
-		const myInput = document.getElementById("add-skills");
-		myInput.addEventListener("keydown", function(event) {
-			if (event.key === "Enter") {
-				event.preventDefault();
+		$('.custom-select').selectize({
+			sortField: 'text'
+		});
+		let today = new Date().toISOString().substr(0, 10);
+		let dateInputs = document.querySelectorAll("input[type='date']");
+		for (let i = 0; i < dateInputs.length; i++) {
+			dateInputs[i].value = today;
+		}
+
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {
+				function: 'GetAllSkills'
+			},
+			success: function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				if (data.status == 'success') {
+					var add_skill = $('#add-skills')[0].selectize;
+					for (let i = 0; i < data.data.length; i++) {
+						var newOption = {
+							value: data.data[i]['name'],
+							text: data.data[i]['name']
+						};
+						add_skill.addOption(newOption);
+					}
+				}
 			}
 		});
 	});
+	let urlParams = new URLSearchParams(window.location.search);
+	let projectId = urlParams.get('project_id');
+	$.ajax({
+		url: '../include/functions.php',
+		type: 'POST',
+		data: {
+			"function": "GetTaskDetails",
+			"id": projectId
+		},
+		success: function(data) {
+			console.log(data);
+			var data = JSON.parse(data);
+			console.log(data);
+			$("#p_name").val(data.data.name);
+			$("#category").val(data.data.category);
+			$("#date").val(data.data.deadline);
+			$("#budget").val(data.data.budget);
+			$("#description").val(data.data.description);
+			for (let i = 0; i < data.skills.length; i++) {
+				$("#skills-container").append('<span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + data.skills[i].name + '</span></span>');
+			}
+		}
+	});
+
+
+	const myInput = document.getElementById("add-skills");
+	myInput.addEventListener("keydown", function(event) {
+	if (event.key === "Enter") {
+		event.preventDefault();
+	}
+	});
 	$(document).on('submit', '#edit-task', function(e) {
 		e.preventDefault();
-        let urlParams = new URLSearchParams(window.location.search);
+		let urlParams = new URLSearchParams(window.location.search);
 		let projectId = urlParams.get('project_id');
 		var form = new FormData(this);
 		var skills = document.querySelectorAll('#skills-container .keyword-text');
@@ -196,7 +240,7 @@
 				console.log(skill.textContent.trim());
 			});
 			form.append('function', 'UpdateTask');
-            form.append('id', projectId);
+			form.append('id', projectId);
 			$.ajax({
 				url: '../include/functions.php',
 				type: 'POST',
@@ -237,85 +281,6 @@
 			})
 			return false;
 		}
-
-	});
-
-	Chart.defaults.global.defaultFontFamily = "Nunito";
-	Chart.defaults.global.defaultFontColor = '#888';
-	Chart.defaults.global.defaultFontSize = '14';
-
-	var ctx = document.getElementById('chart').getContext('2d');
-
-	var chart = new Chart(ctx, {
-		type: 'line',
-
-		// The data for our dataset
-		data: {
-			labels: ["January", "February", "March", "April", "May", "June"],
-			// Information about the dataset
-			datasets: [{
-				label: "Views",
-				backgroundColor: 'rgba(42,65,232,0.08)',
-				borderColor: '#2a41e8',
-				borderWidth: "3",
-				data: [196, 132, 215, 362, 210, 252],
-				pointRadius: 5,
-				pointHoverRadius: 5,
-				pointHitRadius: 10,
-				pointBackgroundColor: "#fff",
-				pointHoverBackgroundColor: "#fff",
-				pointBorderWidth: "2",
-			}]
-		},
-
-		// Configuration options
-		options: {
-
-			layout: {
-				padding: 10,
-			},
-
-			legend: {
-				display: false
-			},
-			title: {
-				display: false
-			},
-
-			scales: {
-				yAxes: [{
-					scaleLabel: {
-						display: false
-					},
-					gridLines: {
-						borderDash: [6, 10],
-						color: "#d8d8d8",
-						lineWidth: 1,
-					},
-				}],
-				xAxes: [{
-					scaleLabel: {
-						display: false
-					},
-					gridLines: {
-						display: false
-					},
-				}],
-			},
-
-			tooltips: {
-				backgroundColor: '#333',
-				titleFontSize: 13,
-				titleFontColor: '#fff',
-				bodyFontColor: '#fff',
-				bodyFontSize: 13,
-				displayColors: false,
-				xPadding: 10,
-				yPadding: 10,
-				intersect: false
-			}
-		},
-
 
 	});
 </script>

@@ -5,110 +5,100 @@ include 'layout/header.php';
 
 <!-- Header Container
 ================================================== -->
-<header id="header-container" class="fullwidth">
 
-    <!-- Header -->
-    <div id="header">
-        <div class="container">
+<header id="header-container" class="fullwidth dashboard-header not-sticky">
 
-            <!-- Left Side Content -->
-            <div class="left-side">
+	<!-- Header -->
+	<div id="header">
+		<div class="container">
 
-                <!-- Logo -->
-                <div id="logo">
-                    <a href="index.html"><img src="images/logo.png" alt=""></a>
-                </div>
+			<!-- Left Side Content -->
+			<div class="left-side">
 
-                <!-- Main Navigation -->
-                <nav id="navigation" class="justify-content-center">
-                    <ul id="responsive">
-                        <li><a href="browse-tasks.php">Browse Tasks</a>
-                        </li>
-                        <li><a href="#">About us</a>
-                        </li>
-						<li><a href="#">FAQs	</a>
-                        </li>
-                        <li><a href="#">Contact us</a>
-                        </li>
+				<!-- Logo -->
+				<div id="logo">
+					<a href="browse-tasks.php"><img src="images/logo.png" alt=""></a>
+				</div>
 
-                    </ul>
-                </nav>
-                <div class="clearfix"></div>
-                <!-- Main Navigation / End -->
+				<!-- Main Navigation -->
+				<nav id="navigation" class="justify-content-center">
+					<ul id="responsive">
+						<li><a href="browse-tasks.php">Browse Tasks</a>
+						</li>
+						<li><a href="#">About us</a>
+						</li>
+						<li><a href="#">FAQs </a>
+						</li>
+						<li><a href="#">Contact us</a>
+						</li>
 
-            </div>
-            <!-- Left Side Content / End -->
+					</ul>
+				</nav>
+				<div class="clearfix"></div>
+				<!-- Main Navigation / End -->
+
+			</div>
+			<!-- Left Side Content / End -->
+
+			<!-- Right Side Content / End -->
+			<div class="right-side">
 
 
-            <!-- Right Side Content / End -->
-            <div class="right-side">
+				<!--  User Notifications / End -->
 
-                <!-- User Menu -->
-                <div class="header-widget">
+				<!-- User Menu -->
+				<div class="header-widget">
 
-                    <!-- Messages -->
-                    <div class="header-notifications user-menu">
-                        <div class="header-notifications-trigger">
-                            <a href="#">
-                                <div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg"
-                                        alt=""></div>
-                            </a>
-                        </div>
+					<!-- Messages -->
+					<div class="header-notifications user-menu">
+						<div class="header-notifications-trigger">
+							<a href="#">
+								<div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg" alt=""></div>
+							</a>
+						</div>
 
-                        <!-- Dropdown -->
-                        <div class="header-notifications-dropdown">
+						<!-- Dropdown -->
+						<div class="header-notifications-dropdown">
 
-                            <!-- User Status -->
-                            <div class="user-status">
+							<!-- User Status -->
+							<div class="user-status">
 
-                                <!-- User Name / Avatar -->
-                                <div class="user-details">
-                                    <div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg"
-                                            alt=""></div>
-                                    <div class="user-name">
-                                        Tom Smith <span>Freelancer</span>
-                                    </div>
-                                </div>
+								<!-- User Name / Avatar -->
+								<div class="user-details">
+									<div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg" alt=""></div>
+									<div class="user-name">
+										<?php echo $_SESSION['user_name']; ?> <span>Freelancer</span>
+									</div>
+								</div>
 
-                                <!-- User Status Switcher -->
-                                <div class="status-switch" id="snackbar-user-status">
-                                    <label class="user-online current-status">Online</label>
-                                    <label class="user-invisible">Invisible</label>
-                                    <!-- Status Indicator -->
-                                    <span class="status-indicator" aria-hidden="true"></span>
-                                </div>
-                            </div>
+							</div>
 
-                            <ul class="user-menu-small-nav">
-                                <li><a href="dashboard.html"><i class="icon-material-outline-dashboard"></i>
-                                        Dashboard</a></li>
-                                <li><a href="dashboard-settings.html"><i class="icon-material-outline-settings"></i>
-                                        Settings</a></li>
-                                <li><a href="login.php"><i
-                                            class="icon-material-outline-power-settings-new"></i> Logout</a></li>
-                            </ul>
+							<ul class="user-menu-small-nav">
+								<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
+								<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
+							</ul>
 
-                        </div>
-                    </div>
+						</div>
+					</div>
 
-                </div>
-                <!-- User Menu / End -->
+				</div>
+				<!-- User Menu / End -->
 
-                <!-- Mobile Navigation Button -->
-                <span class="mmenu-trigger">
-                    <button class="hamburger hamburger--collapse" type="button">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </span>
+				<!-- Mobile Navigation Button -->
+				<span class="mmenu-trigger">
+					<button class="hamburger hamburger--collapse" type="button">
+						<span class="hamburger-box">
+							<span class="hamburger-inner"></span>
+						</span>
+					</button>
+				</span>
 
-            </div>
-            <!-- Right Side Content / End -->
+			</div>
+			<!-- Right Side Content / End -->
 
-        </div>
-    </div>
-    <!-- Header / End -->
+		</div>
+	</div>
+	<!-- Header / End -->
 
 </header>
 <div class="clearfix"></div>
@@ -121,358 +111,259 @@ include 'layout/header.php';
 <!-- Page Content
 ================================================== -->
 <div class="container">
-	<div class="row">
+	<div class="row" style="margin-bottom: 10px;">
 		<div class="col-xl-3 col-lg-4">
-			<div class="sidebar-container">
-				
-				<!-- Location -->
-				<div class="sidebar-widget">
-					<h3>Location</h3>
-					<div class="input-with-icon">
-						<div id="autocomplete-container">
-							<input id="autocomplete-input" type="text" placeholder="Location">
+			<form id="filter-task" enctype="multipart/form-data">
+				<div class="sidebar-container">
+
+					<!-- Keywords -->
+					<div class="sidebar-widget">
+						<h3>Keywords</h3>
+						<div class="keywords-container">
+							<div class="keyword-input-container">
+								<input type="text" name="keywords" class="keyword-input" placeholder="e.g. task title" />
+								<button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+							</div>
+							<div class="keywords-list"><!-- keywords go here --></div>
+							<div class="clearfix"></div>
 						</div>
-						<i class="icon-material-outline-location-on"></i>
 					</div>
-				</div>
 
-				<!-- Category -->
-				<div class="sidebar-widget">
-					<h3>Category</h3>
-					<select class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="All Categories" >
-						<option>Admin Support</option>
-						<option>Customer Service</option>
-						<option>Data Analytics</option>
-						<option>Design & Creative</option>
-						<option>Legal</option>
-						<option>Software Developing</option>
-						<option>IT & Networking</option>
-						<option>Writing</option>
-						<option>Translation</option>
-						<option>Sales & Marketing</option>
-					</select>
-				</div>
-
-				<!-- Keywords -->
-				<div class="sidebar-widget">
-					<h3>Keywords</h3>
-					<div class="keywords-container">
-						<div class="keyword-input-container">
-							<input type="text" class="keyword-input" placeholder="e.g. task title"/>
-							<button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-						</div>
-						<div class="keywords-list"><!-- keywords go here --></div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-
-				<!-- Budget -->
-				<div class="sidebar-widget">
-					<h3>Fixed Price</h3>
-					<div class="margin-top-55"></div>
-
-					<!-- Range Slider -->
-					<input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="2500" data-slider-step="25" data-slider-value="[10,2500]"/>
-				</div>
-
-				<!-- Hourly Rate -->
-				<div class="sidebar-widget">
-					<h3>Hourly Rate</h3>
-					<div class="margin-top-55"></div>
-
-					<!-- Range Slider -->
-					<input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="[10,200]"/>
-				</div>
-
-				<!-- Tags -->
-				<div class="sidebar-widget">
-					<h3>Skills</h3>
-
-					<div class="tags-container">
-						<div class="tag">
-							<input type="checkbox" id="tag1"/>
-							<label for="tag1">front-end dev</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag2"/>
-							<label for="tag2">angular</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag3"/>
-							<label for="tag3">react</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag4"/>
-							<label for="tag4">vue js</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag5"/>
-							<label for="tag5">web apps</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag6"/>
-							<label for="tag6">design</label>
-						</div>
-						<div class="tag">
-							<input type="checkbox" id="tag7"/>
-							<label for="tag7">wordpress</label>
+					<!-- Tags -->
+					<div class="sidebar-widget">
+						<h3>Skills</h3>
+						<!-- More Skills -->
+						<div class="submit-field">
+							<!-- Skills List -->
+							<div class="keywords-container">
+								<div class="keyword-input-container">
+									<select id="add-skills" class="keyword-input with-border custom-select">
+										<option value="">Select a skill...</option>
+									</select>
+									<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+								</div>
+								<div class="keywords-list" id="skills-container">
+								</div>
+								<div class="clearfix"></div>
+							</div>
 						</div>
 					</div>
 					<div class="clearfix"></div>
 
-					<!-- More Skills -->
-					<div class="keywords-container margin-top-20">
-						<div class="keyword-input-container">
-							<input type="text" class="keyword-input" placeholder="add more skills"/>
-							<button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-						</div>
-						<div class="keywords-list"><!-- keywords go here --></div>
-						<div class="clearfix"></div>
+					<!-- Category -->
+					<div class="sidebar-widget">
+						<h3>Category</h3>
+						<select id="category" class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="All Categories">
+							<option>Admin Support</option>
+							<option>Customer Service</option>
+							<option>Data Analytics</option>
+							<option>Design & Creative</option>
+							<option>Legal</option>
+							<option>Software Developing</option>
+							<option>IT & Networking</option>
+							<option>Writing</option>
+							<option>Translation</option>
+							<option>Sales & Marketing</option>
+						</select>
 					</div>
 				</div>
-				<div class="clearfix"></div>
-
-			</div>
+				<button class="button full-width button-sliding-icon ripple-effect margin-top-40" type="submit">Search <i class="icon-material-outline-arrow-right-alt"></i></button>
+			</form>
 		</div>
 		<div class="col-xl-9 col-lg-8 content-left-offset">
 
 			<h3 class="page-title">Search Results</h3>
 
-			<div class="notify-box margin-top-15">
-				<div class="switch-container">
-					<label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Turn on email alerts for this search</span></label>
-				</div>
-
-				<div class="sort-by">
-					<span>Sort by:</span>
-					<select class="selectpicker hide-tick">
-						<option>Relevance</option>
-						<option>Newest</option>
-						<option>Oldest</option>
-						<option>Random</option>
-					</select>
-				</div>
-			</div>
-			
 			<!-- Tasks Container -->
-			<div class="tasks-list-container compact-list margin-top-35">
-				
-				<!-- Task -->
-				<a href="single-task-page.html" class="task-listing">
-
-					<!-- Job Listing Details -->
-					<div class="task-listing-details">
-
-						<!-- Details -->
-						<div class="task-listing-description">
-							<h3 class="task-listing-title">Food Delviery Mobile App</h3>
-							<ul class="task-icons">
-								<li><i class="icon-material-outline-location-on"></i> San Francisco</li>
-								<li><i class="icon-material-outline-access-time"></i> 2 minutes ago</li>
-							</ul>
-							<p class="task-listing-text">Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster.</p>
-							<div class="task-tags">
-								<span>iOS</span>
-								<span>Android</span>
-								<span>mobile apps</span>
-								<span>design</span>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="task-listing-bid">
-						<div class="task-listing-bid-inner">
-							<div class="task-offers">
-								<strong>$1,000 - $2,500</strong>
-								<span>Fixed Price</span>
-							</div>
-							<span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-						</div>
-					</div>
-				</a>
-
-				<!-- Task -->
-				<a href="single-task-page.html" class="task-listing">
-
-					<!-- Job Listing Details -->
-					<div class="task-listing-details">
-
-						<!-- Details -->
-						<div class="task-listing-description">
-							<h3 class="task-listing-title">2000 Words English to German</h3>
-							<ul class="task-icons">
-								<li><i class="icon-material-outline-location-off"></i> Online Job</li>
-								<li><i class="icon-material-outline-access-time"></i> 5 minutes ago</li>
-							</ul>
-							<p class="task-listing-text">Bring to the table win-win strategies to ensure domination and user generated content in real-time will have multiple touchpoints.</p>
-							<div class="task-tags">
-								<span>copywriting</span>
-								<span>translating</span>
-								<span>editing</span>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="task-listing-bid">
-						<div class="task-listing-bid-inner">
-							<div class="task-offers">
-								<strong>$75</strong>
-								<span>Fixed Price</span>
-							</div>
-							<span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-						</div>
-					</div>
-				</a>
-
-				<!-- Task -->
-				<a href="single-task-page.html" class="task-listing">
-
-					<!-- Job Listing Details -->
-					<div class="task-listing-details">
-
-						<!-- Details -->
-						<div class="task-listing-description">
-							<h3 class="task-listing-title">Fix Python Selenium Code</h3>
-							<ul class="task-icons">
-								<li><i class="icon-material-outline-location-off"></i> Online Job</li>
-								<li><i class="icon-material-outline-access-time"></i> 30 minutes ago</li>
-							</ul>
-							<p class="task-listing-text">Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional.</p>
-							<div class="task-tags">
-								<span>Python</span>
-								<span>Flask</span>
-								<span>API Development</span>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="task-listing-bid">
-						<div class="task-listing-bid-inner">
-							<div class="task-offers">
-								<strong>$100 - $150</strong>
-								<span>Hourly Rate</span>
-							</div>
-							<span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-						</div>
-					</div>
-				</a>
-
-				<!-- Task -->
-				<a href="single-task-page.html" class="task-listing">
-
-					<!-- Job Listing Details -->
-					<div class="task-listing-details">
-
-						<!-- Details -->
-						<div class="task-listing-description">
-							<h3 class="task-listing-title">WordPress Theme Installation</h3>
-							<ul class="task-icons">
-								<li><i class="icon-material-outline-location-off"></i> Online Job</li>
-								<li><i class="icon-material-outline-access-time"></i> 1 hour ago</li>
-							</ul>
-							<p class="task-listing-text">Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate customer service with robust ideas.</p>
-							<div class="task-tags">
-								<span>WordPress</span>
-								<span>Theme Installation</span>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="task-listing-bid">
-						<div class="task-listing-bid-inner">
-							<div class="task-offers">
-								<strong>$100</strong>
-								<span>Fixed Price</span>
-							</div>
-							<span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-						</div>
-					</div>
-				</a>
-
-				<!-- Task -->
-				<a href="single-task-page.html" class="task-listing">
-
-					<!-- Job Listing Details -->
-					<div class="task-listing-details">
-
-						<!-- Details -->
-						<div class="task-listing-description">
-							<h3 class="task-listing-title">PHP Core Website Fixes</h3>
-							<ul class="task-icons">
-								<li><i class="icon-material-outline-location-off"></i> Online Job</li>
-								<li><i class="icon-material-outline-access-time"></i> 1 hour ago</li>
-							</ul>
-							<p class="task-listing-text">Objectively innovate empowered manufactured products whereas parallel platforms. Extensible testing procedures for reliable supply.</p>
-							<div class="task-tags">
-								<span>PHP</span>
-								<span>MySQL Administration</span>
-								<span>API Development</span>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="task-listing-bid">
-						<div class="task-listing-bid-inner">
-							<div class="task-offers">
-								<strong>$50 - $80</strong>
-								<span>Hourly Rate</span>
-							</div>
-							<span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-						</div>
-					</div>
-				</a>		
+			<div id="all-tasks" class="tasks-list-container compact-list margin-top-35">
 
 			</div>
 			<!-- Tasks Container / End -->
 
 
-			<!-- Pagination -->
-			<div class="clearfix"></div>
-			<div class="row">
-				<div class="col-md-12">
-					<!-- Pagination -->
-					<div class="pagination-container margin-top-60 margin-bottom-60">
-						<nav class="pagination">
-							<ul>
-								<li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
-								<li><a href="#" class="ripple-effect">1</a></li>
-								<li><a href="#" class="current-page ripple-effect">2</a></li>
-								<li><a href="#" class="ripple-effect">3</a></li>
-								<li><a href="#" class="ripple-effect">4</a></li>
-								<li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</div>
-			<!-- Pagination / End -->
 
 		</div>
 	</div>
 </div>
-
-<!-- Google Autocomplete -->
-<script>
-	function initAutocomplete() {
-		 var options = {
-		  types: ['(cities)'],
-		  // componentRestrictions: {country: "us"}
-		 };
-
-		 var input = document.getElementById('autocomplete-input');
-		 var autocomplete = new google.maps.places.Autocomplete(input, options);
+<style>
+	.selectize-input {
+		padding: 13px 10px !important;
+		height: 45px !important;
 	}
-</script>
 
-<!-- Google API & Maps -->
-<!-- Geting an API Key: https://developers.google.com/maps/documentation/javascript/get-api-key -->
-<script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places"></script>
+	input[type="select-one"] {
+		height: 24px !important;
+	}
+</style>
 
 <?php
-	include 'layout/footer.php';
+include 'layout/footer.php';
 ?>
+
+<script>
+	function getTimeSince(dateString) {
+		let date = new Date(dateString);
+		let now = new Date();
+		let diff = now.getTime() - date.getTime();
+		let duration = '';
+
+		if (diff < 60000) {
+			duration = 'Less than a minute ago';
+		} else if (diff < 3600000) {
+			duration = Math.floor(diff / 60000) + ' minute(s) ago';
+		} else if (diff < 86400000) {
+			duration = Math.floor(diff / 3600000) + ' hour(s) ago';
+		} else {
+			duration = Math.floor(diff / 86400000) + ' day(s) ago';
+		}
+		return duration;
+	}
+
+	function GetSkills(skills, p_id) {
+		let skills_html = '';
+		for (let i = 0; i < skills.length; i++) {
+			if (skills[i].p_id == p_id) {
+				skills_html += `<span style="margin:2px;">${skills[i].name}</span>`;
+			}
+		}
+		return skills_html;
+	}
+	$(document).ready(function() {
+		$('.custom-select').selectize({
+			sortField: 'text'
+		});
+
+		$.ajax({
+			url: 'include/functions.php',
+			type: 'POST',
+			data: {
+				function: 'GetAllSkills'
+			},
+			success: function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				if (data.status == 'success') {
+					var add_skill = $('#add-skills')[0].selectize;
+					for (let i = 0; i < data.data.length; i++) {
+						var newOption = {
+							value: data.data[i]['name'],
+							text: data.data[i]['name']
+						};
+						add_skill.addOption(newOption);
+					}
+				}
+			}
+		});
+
+		console.log('ready');
+		let all_tasks = document.getElementById('all-tasks');
+		$.ajax({
+			url: 'include/functions.php',
+			type: 'POST',
+			data: {
+				function: 'GetAllTasks'
+			},
+			success: function(data) {
+				data = JSON.parse(data);
+				console.log(data);
+				for (let i = 0; i < data.data.length; i++) {
+
+					all_tasks.innerHTML += `
+                <a href="task.php?task_id=${data.data[i].id}" class="task-listing">
+                    <!-- Job Listing Details -->
+                    <div class="task-listing-details">
+
+                        <!-- Details -->
+                        <div class="task-listing-description">
+                            <h3 class="task-listing-title">${data.data[i].name}</h3>
+                            <ul class="task-icons">
+                                <li><i class="icon-feather-tag"></i>${' ' +data.data[i].category}</li>
+								<li><i class="icon-material-outline-access-time"></i>${'  '+ getTimeSince(data.data[i].date)}</li>
+                            </ul>
+                            <p class="task-listing-text">${data.data[i].description}</p>
+                            <div class="task-tags">
+                                ${GetSkills(data.skills, data.data[i].id)}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-listing-bid">
+                        <div class="task-listing-bid-inner">
+                            <div class="task-offers">
+                                <strong>$${data.data[i].budget}</strong>
+                            </div>
+                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
+                        </div>
+                    </div>
+                </a>`;
+				}
+			}
+		});
+	})
+
+	$(document).on('submit', '#filter-task', function(e) {
+		e.preventDefault();
+		let form = new FormData(this);
+		let category= document.getElementById('category');
+		for (let i = 0; i < category.options.length; i++) {
+			if (category.options[i].selected) {
+				form.append('category[]', category.options[i].value);
+			}
+		}
+		var skills = document.querySelectorAll('#skills-container .keyword-text');
+		if (skills.length > 0) {
+			skills.forEach(function(skill) {
+				form.append('skills[]', skill.textContent.trim());
+				console.log(skill.textContent.trim());
+			});
+		}
+		form.append('function', 'FilterTasks');
+		let all_tasks = document.getElementById('all-tasks');	
+		$.ajax({
+			url: 'include/functions.php',
+			type: 'POST',
+			data: form,
+			contentType: false,
+			processData: false,
+			success: function(data) {
+				console.log(data);
+				data = JSON.parse(data);
+				console.log(data);
+				all_tasks.innerHTML = '';
+				for (let i = 0; i < data.data.length; i++) {
+
+					all_tasks.innerHTML += `
+                <a href="task.php?task_id=${data.data[i].id}" class="task-listing">
+                    <!-- Job Listing Details -->
+                    <div class="task-listing-details">
+
+                        <!-- Details -->
+                        <div class="task-listing-description">
+                            <h3 class="task-listing-title">${data.data[i].name}</h3>
+                            <ul class="task-icons">
+                                <li><i class="icon-feather-tag"></i>${' ' +data.data[i].category}</li>
+                                <li><i class="icon-material-outline-access-time"></i>${'  '+ getTimeSince(data.data[i].date)}</li>
+                            </ul>
+                            <p class="task-listing-text">${data.data[i].description}</p>
+                            <div class="task-tags">
+                                ${GetSkills(data.skills, data.data[i].id)}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-listing-bid">
+                        <div class="task-listing-bid-inner">
+                            <div class="task-offers">
+                                <strong>$${data.data[i].budget}</strong>
+                            </div>
+                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
+                        </div>
+                    </div>
+                </a>`;
+				}
+			}
+		});
+	})
+</script>
