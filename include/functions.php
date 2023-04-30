@@ -215,7 +215,7 @@ function GetActiveTasks()
 {
     include 'connection.php';
     $array = array();
-    $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE p_id = projects.id) as bids FROM projects where status='Open' ORDER BY date DESC";
+    $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE p_id = projects.id and bids.status='Interested') as bids FROM projects where status='Open' ORDER BY date DESC";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

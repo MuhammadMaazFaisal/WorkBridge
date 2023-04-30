@@ -96,7 +96,7 @@
 			data: {
 				"function" : "GetTasks"
 			},
-			success: function(data) {
+			success: function(data) { 
 				console.log(data);
 				data = JSON.parse(data);
 				console.log(data);

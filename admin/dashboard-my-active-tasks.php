@@ -84,7 +84,7 @@
 						if (result.isConfirmed) {
 							window.location.reload();
 						}
-					})
+					}) 
 				}
 			}
 		});
