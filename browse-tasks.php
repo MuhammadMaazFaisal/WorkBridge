@@ -53,7 +53,7 @@ include 'layout/header.php';
 					<div class="header-notifications user-menu">
 						<div class="header-notifications-trigger">
 							<a href="#">
-								<div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg" alt=""></div>
+								<div class="user-avatar status-online"><img src="images/user.png" alt=""></div>
 							</a>
 						</div>
 
@@ -65,7 +65,7 @@ include 'layout/header.php';
 
 								<!-- User Name / Avatar -->
 								<div class="user-details">
-									<div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg" alt=""></div>
+									<div class="user-avatar status-online"><img src="images/user.png" alt=""></div>
 									<div class="user-name">
 										<?php echo $_SESSION['user_name']; ?> <span>Freelancer</span>
 									</div>

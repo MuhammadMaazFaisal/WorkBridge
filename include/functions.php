@@ -611,7 +611,7 @@ function PlaceBid()
             $array['message'] = "Bid could not be placed, please try again.";
         }
     } else {
-        $sql = "INSERT INTO bids (p_id, u_id) VALUES (:p_id, :u_id)";
+        $sql = "INSERT INTO bids (p_id, u_id, status) VALUES (:p_id, :u_id, 'Interested')";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':p_id', $_POST['p_id']);
         $stmt->bindParam(':u_id', $_POST['u_id']);

@@ -13,7 +13,7 @@
 
 			<!-- Dashboard Headline -->
 			<div class="dashboard-headline">
-				<h3>Howdy, Maaz!</h3>
+				<h3>Howdy, <?php echo $_SESSION['user_name']; ?></h3>
 				<span>We are glad to see you again!</span>
 
 				<!-- Breadcrumbs -->

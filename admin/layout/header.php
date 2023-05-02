@@ -32,15 +32,6 @@
 			<div id="header">
 				<div class="container">
 
-					<!-- Left Side Content -->
-					<div class="left-side">
-
-						<!-- Logo -->
-						<div id="logo">
-							<a href="index.html"><img src="../images/logo.png" alt=""></a>
-						</div>
-
-					</div>
 					<!-- Left Side Content / End -->
 
 					<!-- Right Side Content / End -->
@@ -56,7 +47,7 @@
 							<div class="header-notifications user-menu">
 								<div class="header-notifications-trigger">
 									<a href="#">
-										<div class="user-avatar status-online"><img src="../images/user-avatar-small-01.jpg" alt=""></div>
+										<div class="user-avatar status-online"><img src="../images/user.png" alt=""></div>
 									</a>
 								</div>
 
@@ -68,12 +59,12 @@
 
 										<!-- User Name / Avatar -->
 										<div class="user-details">
-											<div class="user-avatar status-online"><img src="images/user-avatar-small-01.jpg" alt=""></div>
+											<div class="user-avatar status-online"><img src="../images/user.png" alt=""></div>
 											<div class="user-name">
 												<?php echo $_SESSION['user_name']; ?> <span>Administrator</span>
 											</div>
 										</div>
-									
+
 									</div>
 
 									<ul class="user-menu-small-nav">

@@ -192,5 +192,16 @@
 			backgroundColor: '#383838'
 		});
 	});
+	function Logout(){
+		console.log('logout');
+		$.ajax({
+			url: 'include/functions.php',
+			type: 'POST',
+			data: {function: 'Logout'},
+			success: function(data){
+				window.location.href = 'login.php';
+			}
+		});
+	}
 </script>
 
