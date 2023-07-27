@@ -112,13 +112,13 @@
 									<li>
 										<div class="row">
 
-											<div class="col-xl-6">
+											<div class="col-xl-12">
 												<div class="submit-field">
 													<h5>Add Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
 
 													<!-- Skills List -->
 													<div class="keywords-container">
-														<div class="keyword-input-container">
+														<div class="col-6 keyword-input-container">
 															<input id="add-skills" type="text" class="keyword-input with-border" placeholder="e.g. Angular, Laravel" />
 															<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
 														</div>

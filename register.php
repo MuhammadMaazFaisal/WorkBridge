@@ -65,7 +65,7 @@ include 'layout/header.php';
 					</div>
 					<div class="input-with-icon-left">
 						<i class="icon-feather-phone"></i>
-						<input type="text" title="+919876543210" class="input-text with-border" name="phone" id="phone" value="" placeholder="Phone Number" required />
+						<input type="text" title="919876543210" class="input-text with-border" name="phone" id="phone" value="" placeholder="e.g. 913152389052" required />
 					</div>
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>
@@ -139,6 +139,7 @@ include 'layout/footer.php';
 					cache: false,
 					processData: false,
 					success: function(data) {
+						console.log(data);
 						data = JSON.parse(data);
 						if (data.status == 'success') {
 							Swal.fire({

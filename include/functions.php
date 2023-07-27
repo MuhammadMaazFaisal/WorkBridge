@@ -173,7 +173,7 @@ function Register()
         $array['status'] = 'error';
         $array['message'] = 'Email already exists';
     } else {
-        $sql = "INSERT INTO users (name, email, phone, password, type, status) VALUES (:name, :email, :phone, :password, 'user', 'active')";
+        $sql = "INSERT INTO users (name, email, phone, description, password, type, status) VALUES (:name, :email, :phone,'', :password, 'user', 'active')";
         $stmt = $conn->prepare($sql);
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $stmt->bindParam(':name', $_POST['name']);
