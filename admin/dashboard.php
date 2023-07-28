@@ -1,4 +1,8 @@
-<?php include 'layout/header.php'; ?>
+<?php
+session_start();
+if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
+include 'layout/header.php';
+?>
 
 <!-- Dashboard Container -->
 <div class="dashboard-container">
@@ -77,3 +81,9 @@
 </body>
 
 </html>
+<?php 
+} else {
+	header("Location: ../login.php");
+	exit();
+}
+?>

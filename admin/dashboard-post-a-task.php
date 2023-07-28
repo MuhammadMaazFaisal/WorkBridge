@@ -1,4 +1,8 @@
-<?php include 'layout/header.php'; ?>
+<?php
+session_start();
+if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
+include 'layout/header.php';
+?>
 <!-- Dashboard Container -->
 <div class="dashboard-container">
 
@@ -163,6 +167,26 @@ input[type="select-one"] {
 <!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
 <script src="../js/chart.min.js"></script>
 <script>
+	function SendEmail(data){
+		$.ajax({
+			url: '../include/functions.php',
+			type: 'POST',
+			data: {
+				function: 'SendEmail',
+				p_id: data.p_id
+			},
+			success: function(data) {
+				console.log(data);
+				data = JSON.parse(data);
+				
+				if (data.status == 'success') {
+					// window.location.href = 'dashboard.php';
+				} else {
+					// window.location.href = 'dashboard.php';
+				}
+			}
+		});
+	}
 	$(document).ready(function() {
 		$('.custom-select').selectize({
 			sortField: 'text'
@@ -216,16 +240,7 @@ input[type="select-one"] {
 					console.log(data);
 					data = JSON.parse(data);
 					if (data.status == 'success') {
-						Swal.fire({
-							title: 'Success!',
-							text: data.message,
-							icon: 'success',
-							confirmButtonText: 'Ok'
-						}).then((result) => {
-							if (result.isConfirmed) {
-								window.location.reload();
-							}
-						})
+						SendEmail(data);
 					} else {
 						Swal.fire({
 							title: 'Error!',
@@ -252,3 +267,9 @@ input[type="select-one"] {
 </body>
 
 </html>
+<?php 
+} else {
+	header("Location: ../login.php");
+	exit();
+}
+?>

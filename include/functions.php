@@ -19,8 +19,12 @@ if ($_POST['function'] == 'add-task') {
     UpdateTask();
 } elseif ($_POST['function'] == 'GetUserDetails') {
     GetUserDetails();
+} elseif ($_POST['function'] == 'GetAdminDetails') {
+    GetAdminDetails();
 } elseif ($_POST['function'] == 'UpdateProfile') {
     UpdateProfile();
+} elseif ($_POST['function'] == 'UpdateUserProfile') {
+    UpdateUserProfile();
 } elseif ($_POST['function'] == 'Logout') {
     Logout();
 } elseif ($_POST['function'] == 'GetAllSkills') {
@@ -33,6 +37,8 @@ if ($_POST['function'] == 'add-task') {
     PlaceBid();
 } elseif ($_POST['function'] == 'FilterTasks') {
     FilterTasks();
+} elseif ($_POST['function'] == 'SendEmail') {
+    SendEmail();
 }
 
 function AddTask()
@@ -98,6 +104,7 @@ function AddTask()
             if ($stmt1->execute()) {
                 $array['status'] = 'success';
                 $array['message'] = "Task submitted successfully.";
+                $array['p_id'] = $p_id;
             } else {
                 $array['status'] = 'error';
                 $array['message'] = "Task submission failed, please try again.";
@@ -113,6 +120,96 @@ function AddTask()
     }
 
 
+    echo json_encode($array);
+}
+
+function SendEmail()
+{
+    include 'connection.php';
+    $array = array();
+    $p_id = $_POST['p_id'];
+    $sql = "SELECT * FROM project_skills WHERE p_id=:p_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':p_id', $p_id);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $skills = array();
+    foreach ($result as $row) {
+        $skills[] = $row['s_id'];
+    }
+    $sql1 = "SELECT * FROM user_skills WHERE s_id IN (" . implode(',', $skills) . ")";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->execute();
+    $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    $users = array();
+    foreach ($result1 as $row1) {
+        $users[] = $row1['u_id'];
+    }
+    $sql2 = "SELECT * FROM users WHERE id IN (" . implode(',', $users) . ")";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->execute();
+    $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    $emails = array();
+    foreach ($result2 as $row2) {
+        $emails[] = $row2['email'];
+        $whatsappNumbers[] = $row2['phone']; // Assuming 'phone' is the field that contains WhatsApp numbers.
+    }
+    $sql3 = "SELECT * FROM users WHERE type='admin'";
+    $stmt3 = $conn->prepare($sql3);
+    $stmt3->execute();
+    $result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
+    $from = $result3['email'];
+    $to = implode(',', $emails);
+    $link = "http://localhost/ProjectManagementSy/task.php?id=" . $p_id;
+    $subject = "New Task Notification";
+    $message = "Dear User,\n\nWe hope this message finds you well. We have exciting news for you!\n\nA new task has been added, and your skills match the requirements for this task perfectly. We believe you are the ideal candidate to take on this challenge and contribute your expertise to the project.\n\nPlease click on the following link to view the task details and accept the task:\n" . $link . "\n\nIf you have any questions or concerns, feel free to reach out to us. We look forward to your valuable contribution to the project!";
+    $headers = "From:" . $from;
+    if (mail($to, $subject, $message, $headers)) {
+        $array['status'] = 'success';
+        $array['message'] = "Email sent successfully.";
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = "Email sending failed, please try again.";
+    }
+
+    $wabaId = '100358659781634';
+    $accessToken = 'EAAOJZCYnZCTRQBAG3zX7AGSurdKIXuEUGqsWSKedbuqqIZAusEiN7mLcviAKyJ3ycd7SqAsMVuJBnPhqUZB3MnHLTZAoVPIaIDFxzfx78KlvbUFeyoekZAYuGRvDHnYZAPfRwQU2W4jQpuQcxluM4krAVpqRaI5xHar3vZBJhzO4lxzyh1RFEN9cESSdZBH44SSUH8hhwTbj1ZB1ZAm9N0xqFynfTmcHivESUAZD';
+    $endpoint = 'https://graph.facebook.com/v17.0/' . $wabaId . '/messages';
+    
+    // Loop through each WhatsApp number and send the message
+    foreach ($whatsappNumbers as $whatsappNumber) {
+        $data = [
+            'messaging_product' => 'whatsapp',
+            'to' => $whatsappNumber,
+            'type' => 'template',
+            'template' => [
+                'name' => 'hello_world', // Replace with the template name
+                'language' => [
+                    'code' => 'en_US', // Replace with the desired language code
+                ],
+            ],
+        ];
+
+        // cURL request
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/json',
+        ]);
+
+        $response = curl_exec($ch);
+        if ($response) {
+            $array['w_status'] = 'success';
+            $array['w_message'] = "WhatsApp message sent successfully.";
+        } else {
+            $array['w_status'] = 'error';
+            $array['w_message'] = "WhatsApp message sending failed, please try again.";
+        }
+        curl_close($ch);
+    }
     echo json_encode($array);
 }
 
@@ -146,6 +243,8 @@ function Login()
             $_SESSION['user_email'] = $result['email'];
             $_SESSION['user_type'] = $result['type'];
             $_SESSION['user_skill'] = $skill;
+            $_SESSION['status'] = 'logged_in';
+            $array['session'] = $_SESSION;
         } else {
             // Password is incorrect
             $array['status'] = 'error';
@@ -408,7 +507,7 @@ function UpdateTask()
     echo json_encode($array);
 }
 
-function GetUserDetails()
+function GetAdminDetails()
 {
     include 'connection.php';
     $array = array();
@@ -417,7 +516,7 @@ function GetUserDetails()
     $stmt->bindParam(':id', $_POST['id']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $sql1 = "SELECT * FROM skills";
+    $sql1 = "SELECT * FROM skills where status='active'";
     $stmt1 = $conn->prepare($sql1);
     $stmt1->execute();
     if ($result) {
@@ -428,6 +527,122 @@ function GetUserDetails()
     } else {
         $array['status'] = 'error';
         $array['message'] = 'User Details could not be Fetched';
+    }
+    echo json_encode($array);
+}
+
+function GetUserDetails()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT * FROM users WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $_POST['id']);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'User Details Fetched Successfully';
+        $array['data'] = $result;
+
+        // Fetch skills of the user from the user_skills table
+        $sql1 = "SELECT skills.* FROM skills
+             INNER JOIN user_skills ON skills.id = user_skills.s_id
+             WHERE user_skills.u_id = :u_id AND skills.status='active'";
+        $stmt1 = $conn->prepare($sql1);
+        $stmt1->bindParam(':u_id', $_POST['id']);
+        $stmt1->execute();
+        $userSkills = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+        $array['skills'] = $userSkills;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'User Details could not be Fetched';
+    }
+
+    echo json_encode($array);
+}
+
+function UpdateUserProfile()
+{
+    include 'connection.php';
+    $array = array();
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $description = $_POST['description'];
+    $skills = $_POST['skills'];
+    $password = $_POST['old-password'];
+    $newpassword = $_POST['new-password'];
+    $cpassword = $_POST['r-new-password'];
+    $sql = "SELECT * FROM users WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (count($result) > 0 && $cpassword != "") {
+        if (password_verify($password, $result['password'])) {
+            if ($newpassword == $cpassword) {
+                $password = password_hash($newpassword, PASSWORD_DEFAULT);
+            } else {
+                $array['status'] = 'error';
+                $array['message'] = "Password does not match";
+                echo json_encode($array);
+                die();
+            }
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Old Password is incorrect";
+            echo json_encode($array);
+            die();
+        }
+    }
+
+    $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, description=:description";
+    if ($password != "") {
+        $sql1 .= ", password=:password WHERE id=:id";
+        $stmt = $conn->prepare($sql1);
+        $stmt->bindParam(':password', $password);
+    } else {
+        $sql1 .= " WHERE id=:id";
+        $stmt = $conn->prepare($sql1);
+    }
+
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':phone', $phone);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+        #get all s_id which have name in skills
+        $sql2 = "SELECT id FROM skills WHERE name IN (" . implode(",", array_map(function ($value) {
+            return "'" . $value . "'";
+        }, $skills)) . ")";
+        $stmt2 = $conn->prepare($sql2);
+        $stmt2->execute();
+        $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+        $s_ids = array();
+        foreach ($result2 as $row) {
+            array_push($s_ids, $row['id']);
+        }
+        #delete all user_skills with u_id
+        $sql3 = "DELETE FROM user_skills WHERE u_id=:u_id";
+        $stmt3 = $conn->prepare($sql3);
+        $stmt3->bindParam(':u_id', $id);
+        $stmt3->execute();
+        #insert all user_skills with u_id and s_id
+        $sql4 = "INSERT INTO user_skills (u_id, s_id) VALUES ";
+        $sql4 .= implode(",", array_map(function ($value) use ($id) {
+            return "('" . $id . "','" . $value . "')";
+        }, $s_ids));
+        $stmt4 = $conn->prepare($sql4);
+        $stmt4->execute();
+        $array['status'] = 'success';
+        $array['message'] = "Profile Updated Successfully";
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = "Profile could not be Updated";
     }
     echo json_encode($array);
 }
@@ -478,39 +693,101 @@ function UpdateProfile()
         $stmt = $conn->prepare($sql1);
     }
 
-
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':phone', $phone);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
-        $stmt1 = $conn->prepare("DELETE FROM skills");
-        $stmt1->execute();
+        // Assume $skills is an array containing the skills you want to update in the database.
+
+        // First, get the existing skills from the database
+        $stmt01 = $conn->prepare("SELECT `id`, `name` FROM `skills`");
+        if ($stmt01->execute()) {
+            $existingSkills = $stmt01->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Failed to fetch existing skills. Please try again.";
+            echo json_encode($array);
+            die();
+        }
+
+        // Convert all skill names to lowercase for case-insensitive comparison
+        $skills = array_map('strtolower', $skills);
+
+        // Create an associative array to store the existing skills for quick lookup
+        $existingSkillNames = array_column($existingSkills, 'id', 'name');
+
+        // Prepare statements for adding and updating skills
+        $stmtAdd = $conn->prepare("INSERT INTO skills (name, status) VALUES (:name, 'active')");
+        $stmtUpdateStatus = $conn->prepare("UPDATE skills SET status = 'active' WHERE id = :id");
+
+        // Iterate through the skills and update the database accordingly
         foreach ($skills as $skill) {
-            $stmt1 = $conn->prepare("INSERT INTO skills ( name) VALUES ( :name)");
-            $stmt1->bindParam(':name', $skill);
-            if ($stmt1->execute()) {
-                $array['status'] = 'success';
-                $array['message'] = "Profile Updated Successfully";
+            $skillExists = array_key_exists($skill, $existingSkillNames);
+            if (!$skillExists) {
+                // If the skill doesn't exist, add it to the database
+                $stmtAdd->bindParam(':name', $skill);
+                if ($stmtAdd->execute()) {
+                    $array['status'] = 'success';
+                    $array['message'] = "Profile Updated Successfully";
+                } else {
+                    $array['status'] = 'error';
+                    $array['message'] = "Profile could not be updated, please try again.";
+                    echo json_encode($array);
+                    die();
+                }
             } else {
+                // If the skill exists, update its status to 'active'
+                $skillId = $existingSkillNames[$skill];
+                $stmtUpdateStatus->bindParam(':id', $skillId);
+                if (!$stmtUpdateStatus->execute()) {
+                    $array['status'] = 'error';
+                    $array['message'] = "Profile could not be updated, please try again.";
+                    echo json_encode($array);
+                    die();
+                }
+            }
+        }
+
+        // Update status to 'inactive' for skills that were not provided in the $skills array
+        $inactiveSkills = array_diff(array_map('strtolower', array_column($existingSkills, 'name')), $skills);
+        if (!empty($inactiveSkills)) {
+            // Prepare the SQL statement with separate named placeholders for each skill
+            $placeholders = implode(', ', array_map(function ($skill) {
+                return ':name_' . $skill;
+            }, $inactiveSkills));
+            $sql = "UPDATE skills SET status = 'inactive' WHERE name IN ($placeholders)";
+
+            // Prepare the statement
+            $stmtUpdateStatus = $conn->prepare($sql);
+
+            // Bind parameters using separate named placeholders for each skill
+            foreach ($inactiveSkills as $skill) {
+                $paramName = ':name_' . $skill;
+                $stmtUpdateStatus->bindValue($paramName, $skill);
+            }
+
+            if (!$stmtUpdateStatus->execute()) {
                 $array['status'] = 'error';
                 $array['message'] = "Profile could not be updated, please try again.";
                 echo json_encode($array);
                 die();
             }
         }
+
+        // All operations were successful
+        $array['status'] = 'success';
+        $array['message'] = "Profile Updated Successfully";
+        echo json_encode($array);
     } else {
         $array['status'] = 'error';
         $array['message'] = "Profile could not be updated, please try again.";
         echo json_encode($array);
         die();
     }
-
-
-
-    echo json_encode($array);
 }
+
 
 function Logout()
 {
@@ -522,7 +799,7 @@ function GetAllSkills()
 {
     include 'connection.php';
     $array = array();
-    $sql = "SELECT * FROM skills";
+    $sql = "SELECT * FROM skills WHERE status='active'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -634,13 +911,13 @@ function FilterTasks()
     $categories = isset($_POST['category']) ? $_POST['category'] : array();
 
     // Construct SQL query
-    $sql0="Select id from skills where name in ('".implode("','",$skills)."')";
+    $sql0 = "Select id from skills where name in ('" . implode("','", $skills) . "')";
     $stmt0 = $conn->prepare($sql0);
     $stmt0->execute();
     $result0 = $stmt0->fetchAll(PDO::FETCH_ASSOC);
-    $skills=array();
-    foreach($result0 as $row){
-        array_push($skills,$row['id']);
+    $skills = array();
+    foreach ($result0 as $row) {
+        array_push($skills, $row['id']);
     }
     $sql = 'SELECT id, name, category, budget, description, deadline, upload, status, date FROM projects WHERE 1';
 

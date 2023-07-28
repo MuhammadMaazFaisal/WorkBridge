@@ -1,4 +1,6 @@
 <?php
+session_start();
+if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 include 'layout/header.php';
 ?>
 
@@ -367,3 +369,9 @@ include 'layout/footer.php';
 		});
 	})
 </script>
+<?php 
+} else {
+	header("Location: login.php");
+	exit();
+}
+?>

@@ -1,4 +1,14 @@
-<?php include 'layout/header.php'; ?>
+<?php
+session_start();
+if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
+include 'layout/header.php';
+?>
+
+<style>
+	.fields-ul > li{
+			border-bottom: none !important;
+		}
+</style>
 
 <!-- Dashboard Container -->
 <div class="dashboard-container">
@@ -43,9 +53,8 @@
 
 									<div class="col-auto">
 										<div class="avatar-wrapper" data-tippy-placement="bottom" title="Change Avatar">
-											<img class="profile-pic" src="images/user-avatar-placeholder.png" alt="" />
+											<img class="profile-pic" src="../images/user-avatar-placeholder.png" alt="" />
 											<div class="upload-button"></div>
-											<input class="file-upload" type="file" accept="image/*" />
 										</div>
 									</div>
 
@@ -120,7 +129,7 @@
 													<div class="keywords-container">
 														<div class="col-6 keyword-input-container">
 															<input id="add-skills" type="text" class="keyword-input with-border" placeholder="e.g. Angular, Laravel" />
-															<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+															<button type="button" class="keyword-input-button ripple-effect mr-3"><i class="icon-material-outline-add"></i></button>
 														</div>
 														<div class="keywords-list" id="skills-container">
 														</div>
@@ -226,7 +235,7 @@
 			url: '../include/functions.php',
 			type: 'POST',
 			data: {
-				function: 'GetUserDetails',
+				function: 'GetAdminDetails',
 				id: <?php echo $_SESSION['user_id']; ?>
 			},
 			success: function(data) {
@@ -312,3 +321,9 @@
 </body>
 
 </html>
+<?php 
+} else {
+	header("Location: ../login.php");
+	exit();
+}
+?>
