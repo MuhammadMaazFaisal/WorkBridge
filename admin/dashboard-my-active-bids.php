@@ -23,7 +23,7 @@ include 'layout/header.php';
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
-						<li><a href="#">Dashboard</a></li>
+						<li><a href="dashboard.php">Dashboard</a></li>
 						<li>My Active Tasks</li>
 					</ul>
 				</nav>

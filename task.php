@@ -109,7 +109,7 @@ include 'layout/header.php';
 
 <!-- Titlebar
 ================================================== -->
-<div class="single-page-header" data-background-image="images/single-task.jpg">
+<div class="single-page-header" data-background-image="#">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

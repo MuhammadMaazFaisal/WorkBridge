@@ -22,7 +22,7 @@ include 'layout/header.php';
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
-						<li><a href="#">Dashboard</a></li>
+						<li><a href="dashboard.php">Dashboard</a></li>
 						<li>Edit Task</li>
 					</ul>
 				</nav>
@@ -118,7 +118,7 @@ include 'layout/header.php';
 											<h5>Describe Your Project</h5>
 											<textarea cols="30" rows="5" id="description" name="description" class="with-border"></textarea>
 											<div class="uploadButton margin-top-30">
-												<input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" name="upload" multiple />
+												<input class="uploadButton-input" type="file" accept="*/*" id="upload" name="upload"  />
 												<label class="uploadButton-button ripple-effect" for="upload">Upload Files</label>
 												<span class="uploadButton-file-name">Images or documents that might be helpful in describing your project</span>
 											</div>
@@ -234,8 +234,6 @@ include 'layout/header.php';
 	});
 	$(document).on('submit', '#edit-task', function(e) {
 		e.preventDefault();
-		let urlParams = new URLSearchParams(window.location.search);
-		let projectId = urlParams.get('project_id');
 		var form = new FormData(this);
 		var skills = document.querySelectorAll('#skills-container .keyword-text');
 		if (skills.length > 0) {
@@ -263,7 +261,7 @@ include 'layout/header.php';
 							confirmButtonText: 'Ok'
 						}).then((result) => {
 							if (result.isConfirmed) {
-								window.location.reload();
+								window.location.href="dashboard-manage-tasks.php";
 							}
 						})
 					} else {

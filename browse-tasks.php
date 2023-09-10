@@ -123,10 +123,9 @@ include 'layout/header.php';
 						<h3>Keywords</h3>
 						<div class="keywords-container">
 							<div class="keyword-input-container">
-								<input type="text" name="keywords" class="keyword-input" placeholder="e.g. task title" />
-								<button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+								<input type="text" name="keywords" class="keyword-inpu" placeholder="e.g. task title" />
 							</div>
-							<div class="keywords-list"><!-- keywords go here --></div>
+							<div class="keywords-lis" id="keywords-container"><!-- keywords go here --></div>
 							<div class="clearfix"></div>
 						</div>
 					</div>
@@ -142,7 +141,7 @@ include 'layout/header.php';
 									<select id="add-skills" class="keyword-input with-border custom-select">
 										<option value="">Select a skill...</option>
 									</select>
-									<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+									<button id="myButton" type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
 								</div>
 								<div class="keywords-list" id="skills-container">
 								</div>
@@ -180,6 +179,7 @@ include 'layout/header.php';
 			<div id="all-tasks" class="tasks-list-container compact-list margin-top-35">
 
 			</div>
+			<div id="pagination-container"></div>
 			<!-- Tasks Container / End -->
 
 
@@ -203,23 +203,26 @@ include 'layout/footer.php';
 ?>
 
 <script>
-	function getTimeSince(dateString) {
-		let date = new Date(dateString);
-		let now = new Date();
-		let diff = now.getTime() - date.getTime();
-		let duration = '';
-
-		if (diff < 60000) {
-			duration = 'Less than a minute ago';
-		} else if (diff < 3600000) {
-			duration = Math.floor(diff / 60000) + ' minute(s) ago';
-		} else if (diff < 86400000) {
-			duration = Math.floor(diff / 3600000) + ' hour(s) ago';
-		} else {
-			duration = Math.floor(diff / 86400000) + ' day(s) ago';
-		}
-		return duration;
-	}
+    function getTimeSince(serverTimestamp) {
+        const serverTime = new Date(serverTimestamp);
+        const now = new Date(); // This will be in the client's local time
+    
+        // Calculate the time difference using the server's time
+        const diff = now.getTime() - serverTime.getTime() + now.getTimezoneOffset() * 60 * 1000;
+        let duration = '';
+    
+        if (diff < 60000) {
+            duration = 'Less than a minute ago';
+        } else if (diff < 3600000) {
+            duration = Math.floor(diff / 60000) + ' minute(s) ago';
+        } else if (diff < 86400000) {
+            duration = Math.floor(diff / 3600000) + ' hour(s) ago';
+        } else {
+            duration = Math.floor(diff / 86400000) + ' day(s) ago';
+        }
+    
+        return duration;
+    }
 
 	function GetSkills(skills, p_id) {
 		let skills_html = '';
@@ -230,7 +233,89 @@ include 'layout/footer.php';
 		}
 		return skills_html;
 	}
-	$(document).ready(function() {
+	
+    let all_tasks = document.getElementById('all-tasks');
+    let currentPage = 1; // Current page number
+    const itemsPerPage = 10; // Number of items per page
+    let alldata; // Complete data set
+    
+    // Function to render a page of job listings
+    function renderPage(pageNumber) {
+        all_tasks.innerHTML = ''; // Clear the job listings container
+    
+        // Check if alldata is defined
+        if (alldata) {
+            // Calculate the start and end index for the current page
+            const startIndex = (pageNumber - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+    
+            // Loop through the data and render job listings for the current page
+            for (let i = startIndex; i < Math.min(endIndex, alldata.data.length); i++) {
+                 all_tasks.innerHTML += `
+                <a href="task.php?task_id=${alldata.data[i].id}" class="task-listing">
+                    <!-- Job Listing Details -->
+                    <div class="task-listing-details">
+
+                        <!-- Details -->
+                        <div class="task-listing-description">
+                            <h3 class="task-listing-title">${alldata.data[i].name}</h3>
+                            <ul class="task-icons">
+                                <li><i class="icon-feather-tag"></i>${' ' +alldata.data[i].category}</li>
+								<li><i class="icon-material-outline-access-time"></i>${'  '+ getTimeSince(alldata.data[i].date)}</li>
+                            </ul>
+                            <p class="task-listing-text">${alldata.data[i].description}</p>
+                            <div class="task-tags">
+                                ${GetSkills(alldata.skills, alldata.data[i].id)}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-listing-bid">
+                        <div class="task-listing-bid-inner">
+                            <div class="task-offers">
+                                <strong>$${alldata.data[i].budget}</strong>
+                            </div>
+                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
+                        </div>
+                    </div>
+                </a>`;
+            }
+        }
+    }
+    
+    $(document).ready(function() {
+        $.ajax({
+            url: 'include/functions.php',
+            type: 'POST',
+            data: {
+                function: 'GetAllTasks'
+            },
+            success: function(response) {
+                alldata = JSON.parse(response); // Store the complete data set
+                console.log("startdata", alldata);
+    
+                // Initialize the pagination plugin
+                $('#pagination-container').pagination({
+                    dataSource: alldata.data, // Use alldata for pagination
+                    pageSize: itemsPerPage,
+                    callback: function(data, pagination) {
+                        // Render the current page of job listings
+                        renderPage(pagination.pageNumber);
+                    }
+                });
+    
+                // Initial render of the first page
+                renderPage(currentPage);
+            }
+        });
+
+
+        $("#myButton").click(function() {
+            $('#add-skills')[0].selectize.clear();
+          });
+        	    
+	    
 		$('.custom-select').selectize({
 			sortField: 'text'
 		});
@@ -243,7 +328,7 @@ include 'layout/footer.php';
 			},
 			success: function(data) {
 				data = JSON.parse(data);
-				console.log(data);
+				console.log("das",data);
 				if (data.status == 'success') {
 					var add_skill = $('#add-skills')[0].selectize;
 					for (let i = 0; i < data.data.length; i++) {
@@ -256,53 +341,7 @@ include 'layout/footer.php';
 				}
 			}
 		});
-
-		console.log('ready');
-		let all_tasks = document.getElementById('all-tasks');
-		$.ajax({
-			url: 'include/functions.php',
-			type: 'POST',
-			data: {
-				function: 'GetAllTasks'
-			},
-			success: function(data) {
-				data = JSON.parse(data);
-				console.log(data);
-				for (let i = 0; i < data.data.length; i++) {
-
-					all_tasks.innerHTML += `
-                <a href="task.php?task_id=${data.data[i].id}" class="task-listing">
-                    <!-- Job Listing Details -->
-                    <div class="task-listing-details">
-
-                        <!-- Details -->
-                        <div class="task-listing-description">
-                            <h3 class="task-listing-title">${data.data[i].name}</h3>
-                            <ul class="task-icons">
-                                <li><i class="icon-feather-tag"></i>${' ' +data.data[i].category}</li>
-								<li><i class="icon-material-outline-access-time"></i>${'  '+ getTimeSince(data.data[i].date)}</li>
-                            </ul>
-                            <p class="task-listing-text">${data.data[i].description}</p>
-                            <div class="task-tags">
-                                ${GetSkills(data.skills, data.data[i].id)}
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="task-listing-bid">
-                        <div class="task-listing-bid-inner">
-                            <div class="task-offers">
-                                <strong>$${data.data[i].budget}</strong>
-                            </div>
-                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
-                        </div>
-                    </div>
-                </a>`;
-				}
-			}
-		});
-	})
+});
 
 	$(document).on('submit', '#filter-task', function(e) {
 		e.preventDefault();

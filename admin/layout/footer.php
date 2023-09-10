@@ -184,6 +184,7 @@
 ================================================== -->
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../js/jquery-migrate-3.0.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.js" integrity="sha512-VE1SVJJWxA3banvl97A4IXikhIwyPWwWAjST8kHzvnUxSI7eoKblUceEpUHGfnuFx+7GszvViiDW9+0NlZJe3A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="../js/mmenu.min.js"></script>
 <script src="../js/tippy.all.min.js"></script>
 <script src="../js/simplebar.min.js"></script>

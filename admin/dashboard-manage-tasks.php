@@ -23,7 +23,7 @@ include 'layout/header.php';
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
-						<li><a href="#">Dashboard</a></li>
+						<li><a href="dashboard.php">Dashboard</a></li>
 						<li>Manage Tasks</li>
 					</ul>
 				</nav>
@@ -121,8 +121,9 @@ include 'layout/header.php';
 												</ul>
 											<div class="buttons-to-right always-visible">
 												<a href="dashboard-manage-bidders.php?project_id=${data.data[i].id}" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Manage Bidders </a>
+												<a href="dashboard-view-task.php?project_id=${data.data[i].id}" class="button gray ripple-effect ico" title="View" data-tippy-placement="top"><i class="icon-feather-eye"></i></a>
 												<a href="dashboard-edit-task.php?project_id=${data.data[i].id}" class="button gray ripple-effect ico" title="Edit" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-												<a onclick="TaskStatusChange(${data.data[i].id})" class="button gray ripple-effect ico" title="Remove" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+												<a onclick="TaskStatusChange(${data.data[i].id})" class="button gray ripple-effect ico" title="Change Status" data-tippy-placement="top"><i class="icon-feather-rotate-cw"></i></a>
 											</div>
 											</div>
 										</div>

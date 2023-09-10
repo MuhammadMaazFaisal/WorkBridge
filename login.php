@@ -1,6 +1,25 @@
 <?php
 include 'layout/header.php';
 ?>
+<style>
+    .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.toggle-password i {
+    font-size: 18px;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.toggle-password:hover i {
+    color: #333; /* Change color on hover for better visibility */
+}
+</style>
 
 <!-- Header Container
 ================================================== -->
@@ -36,7 +55,12 @@ include 'layout/header.php';
 			<div class="col-md-12">
 
 				<h2>Log In</h2>
-
+                <nav id="breadcrumbs" class="dark">
+					<ul>
+						<li><a href="#">Home</a></li>
+						<li>Log In</li>
+					</ul>
+				</nav>
 			</div>
 		</div>
 	</div>
@@ -64,9 +88,16 @@ include 'layout/header.php';
 					</div>
 
 					<div class="input-with-icon-left">
-						<i class="icon-material-outline-lock"></i>
-						<input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required />
-					</div>
+                        <i class="icon-material-outline-lock"></i>
+                        <input type="password" class="input-text with-border" name="password" id="password" placeholder="Password" required />
+                        <span class="toggle-password" id="show-password">
+                            Show
+                        </span>
+                    </div>
+                    
+    				<div class="welcome-text" style="margin-bottom:0px ">
+    					<span><a href="forgot-password.php">Forget Password?</a></span>
+    				</div>
 
 
 					<!-- Button -->
@@ -89,6 +120,21 @@ include 'layout/footer.php';
 ?>
 
 <script>
+    $(document).ready(function () {
+        $('#show-password').on('click', function () {
+            var passwordField = $('#password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
+    });
 	$(document).on('submit', '#login-form', function(e) {
 		e.preventDefault();
 		var form = new FormData(this);
@@ -101,8 +147,9 @@ include 'layout/footer.php';
 			cache: false,
 			processData: false,
 			success: function(data) {
-				console.log(data);
+				
 				data = JSON.parse(data);
+				console.log(data);
 				if (data.status == 'success') {
 					Swal.fire({
 						icon: 'success',
@@ -125,7 +172,7 @@ include 'layout/footer.php';
 						timer: 5000
 					}).then((result) => {
 						if (result.isConfirmed) {
-							window.location.reload();
+				// 			window.location.reload();
 						}
 					})
 				}

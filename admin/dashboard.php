@@ -31,28 +31,21 @@ include 'layout/header.php';
 
 			<!-- Fun Facts Container -->
 			<div class="fun-facts-container">
-				<div class="fun-fact" data-fun-fact-color="#36bd78">
-					<div class="fun-fact-text">
-						<span>Total Bids</span>
-						<h4>3</h4>
+					<div class="fun-fact" data-fun-fact-color="#b81b7f">
+						<div class="fun-fact-text">
+							<span>Total Tasks</span>
+							<h1 id="total-tasks"></h1>
+						</div>
+						<div class="fun-fact-icon"><i class="icon-material-outline-business-center"></i></div>
 					</div>
-					<div class="fun-fact-icon"><i class="icon-material-outline-gavel"></i></div>
-				</div>
-				<div class="fun-fact" data-fun-fact-color="#b81b7f">
-					<div class="fun-fact-text">
-						<span>Task Completed</span>
-						<h4>0</h4>
+					<div class="fun-fact" data-fun-fact-color="#36bd78">
+						<div class="fun-fact-text">
+							<span>Total Bids</span>
+							<h1 id="total-bids"></h1>
+						</div>
+						<div class="fun-fact-icon"><i class="icon-material-outline-gavel"></i></div>
 					</div>
-					<div class="fun-fact-icon"><i class="icon-material-outline-business-center"></i></div>
 				</div>
-				<div class="fun-fact" data-fun-fact-color="#36bd78">
-					<div class="fun-fact-text">
-						<span>Task Bids</span>
-						<h4>2</h4>
-					</div>
-					<div class="fun-fact-icon"><i class="icon-material-outline-gavel"></i></div>
-				</div>
-			</div>
 			<div class="fun-facts-container" style="margin-top: 10px;">
 
 
@@ -71,12 +64,28 @@ include 'layout/header.php';
 
 
 <!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
+<?php include 'layout/footer.php'; ?>
 <script src="js/chart.min.js"></script>
 <script>
-
+$(document).ready(function() {
+			$.ajax({
+				url: '../include/functions.php',
+				type: 'POST',
+				data: {
+					"function": "GetTotal"
+				},
+				success: function(data) {
+					console.log(data);
+					data = JSON.parse(data);
+					console.log(data);
+					$("#total-bids").html(data.total_bids);
+					$("#total-tasks").html(data.total_tasks);
+				}
+			});
+		});
 </script>
 
-<?php include 'layout/footer.php'; ?>
+
 
 </body>
 

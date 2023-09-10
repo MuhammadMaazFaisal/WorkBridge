@@ -270,7 +270,7 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 																<select id="add-skills" class="keyword-input with-border custom-select">
 																	<option value="">Select a skill...</option>
 																</select>
-																<button type="button" class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+																<button type="button" class="keyword-input-button ripple-effect" style="margin-right:25px"><i class="icon-material-outline-add"></i></button>
 															</div>
 															<div class="keywords-list" id="skills-container">
 															</div>

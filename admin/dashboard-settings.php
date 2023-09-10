@@ -29,7 +29,7 @@ include 'layout/header.php';
 				<nav id="breadcrumbs" class="dark">
 					<ul>
 						<li><a href="#">Home</a></li>
-						<li><a href="#">Dashboard</a></li>
+						<li><a href="dashboard.php">Dashboard</a></li>
 						<li>Settings</li>
 					</ul>
 				</nav>
@@ -129,7 +129,7 @@ include 'layout/header.php';
 													<div class="keywords-container">
 														<div class="col-6 keyword-input-container">
 															<input id="add-skills" type="text" class="keyword-input with-border" placeholder="e.g. Angular, Laravel" />
-															<button type="button" class="keyword-input-button ripple-effect mr-3"><i class="icon-material-outline-add"></i></button>
+															<button type="button" class="keyword-input-button ripple-effect mr-5" style="margin-right:25px"><i class="icon-material-outline-add"></i></button>
 														</div>
 														<div class="keywords-list" id="skills-container">
 														</div>
