@@ -303,7 +303,7 @@ $(document).ready(function(){
 
 	// Init
 	$(window).on('load resize', function() {
-		wrapperHeight();
+// 		wrapperHeight();
 		fullPageScrollbar();
 	});
 

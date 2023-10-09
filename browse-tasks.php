@@ -77,6 +77,7 @@ include 'layout/header.php';
 
 							<ul class="user-menu-small-nav">
 								<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
+								<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
 								<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
 							</ul>
 
@@ -155,6 +156,7 @@ include 'layout/header.php';
 					<div class="sidebar-widget">
 						<h3>Category</h3>
 						<select id="category" class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="All Categories">
+						    <option>All Categories</option>
 							<option>Admin Support</option>
 							<option>Customer Service</option>
 							<option>Data Analytics</option>
@@ -168,8 +170,10 @@ include 'layout/header.php';
 						</select>
 					</div>
 				</div>
+				
 				<button class="button full-width button-sliding-icon ripple-effect margin-top-40" type="submit">Search <i class="icon-material-outline-arrow-right-alt"></i></button>
 			</form>
+		        	<button id="clear-filters-button" type="button" class="button full-width ripple-effect" style="background-color:cornflowerblue;margin-top:10px">Clear Filters</button>
 		</div>
 		<div class="col-xl-9 col-lg-8 content-left-offset">
 
@@ -187,6 +191,8 @@ include 'layout/header.php';
 		</div>
 	</div>
 </div>
+
+
 <style>
 	.selectize-input {
 		padding: 13px 10px !important;
@@ -196,7 +202,77 @@ include 'layout/header.php';
 	input[type="select-one"] {
 		height: 24px !important;
 	}
+	.custom-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.modal-dialog {
+  position: relative;
+  margin: auto;
+  top: 20%;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 15px;
+  background: #f1f1f1;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center; /* Center-aligns the button */
+}
+
+.modal-body {
+  padding: 15px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: blue;
+}
+
+
 </style>
+
+<div class="custom-modal" id="customModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Details</h5>
+      </div>
+      <div class="modal-body">
+        Please Update your Skills and WhatsApp number so that you can receive WhatsApp notification whenever there is a new task posted related to your skills.
+      </div>
+      <div class="modal-footer">
+        <a href="/settings.php#add-skill"><button type="button" class="btn btn-primary">Add Details</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <?php
 include 'layout/footer.php';
@@ -285,6 +361,29 @@ include 'layout/footer.php';
     }
     
     $(document).ready(function() {
+        
+<?php if($_SESSION['user_phone']=='' || $_SESSION['user_skill']=='User has no skills'){ ?>
+ $('#customModal').css('display', 'block');
+<?php } ?>
+
+ 
+
+        
+        $("#clear-filters-button").click(function() {
+            // Reset keyword input
+            $(".keyword-input").val("");
+    
+            // Clear selected skills
+            $('#skills-container').empty();
+    
+            // Clear selected categories
+            $("#category").val("");
+            $("#category").selectpicker("refresh");
+    
+            // Trigger form submission to reset the search
+            $("#filter-task").submit();
+        });
+        
         $.ajax({
             url: 'include/functions.php',
             type: 'POST',

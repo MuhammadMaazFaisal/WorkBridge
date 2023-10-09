@@ -2,11 +2,9 @@
 session_start();
 if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 	include 'layout/header.php';
-?>
+ ?>
 	<style>
-		#wrapper {
-			padding-top: 28px !important;
-		}
+		
 		.selectize-input {
 			padding: 13px 10px !important;
 			height: 45px !important;
@@ -18,6 +16,24 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 		.fields-ul > li{
 			border-bottom: none !important;
 		}
+		
+    .toggle-password {
+        position: absolute;
+        top: 45%;
+        right: 25px;
+        cursor: pointer;
+        color:#2a41e8;
+    }
+    
+    .toggle-password i {
+        font-size: 18px;
+        color: #888;
+        transition: color 0.3s;
+    }
+    
+    .toggle-password:hover i {
+        color: #333; /* Change color on hover for better visibility */
+    }
 	</style>
 
 	<!-- Header Container
@@ -92,6 +108,7 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 
 								<ul class="user-menu-small-nav">
 									<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
+									<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
 									<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
 								</ul>
 
@@ -208,12 +225,19 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												</div>
 												<div class="col-xl-6">
 													<div class="submit-field">
-														<h5>Phone Number</h5>
-														<input id="phone" name="phone" type="text" class="with-border" value="" placeholder="e.g. 913152389052">
+														<h5>Email</h5>
+														<input id="email" name="email" type="email" class="with-border">
+													</div>
+												</div>
+												<div class="col-xl-4">
+													<div class="submit-field">
+														<h5>Whatsapp Number</h5>
+														<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052" required />
+                                                        <input type="hidden" id="country-code" name="country_code" value="" /> 
 													</div>
 												</div>
 
-												<div class="col-xl-6">
+												<div class="col-xl-4">
 													<!-- Account Type -->
 													<div class="submit-field">
 														<h5>Account Type</h5>
@@ -222,21 +246,18 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 																<input type="radio" name="freelancer" id="freelancer" class="account-type-radio" />
 																<label for="freelancer" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Freelancer</label>
 															</div>
-
-															<div>
-																<input type="radio" name="employer" id="employer" class="account-type-radio" />
-																<label for="employer" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Employer</label>
-															</div>
 														</div>
 													</div>
 												</div>
-
-												<div class="col-xl-6">
+												<div class="col-xl-4">
 													<div class="submit-field">
-														<h5>Email</h5>
-														<input id="email" name="email" type="email" class="with-border">
+														<h5>Phone Number</h5>
+														<input type="tel" class="input-text with-border" id="mphone" placeholder="e.g. 3152389052" required />
+                                                        <input type="hidden" id="mcountry-code" name="mcountry_code" value="" /> 
 													</div>
 												</div>
+
+												
 
 											</div>
 										</div>
@@ -247,12 +268,12 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 						</div>
 
 						<!-- Dashboard Box -->
-						<div class="col-xl-12">
+						<div class="col-xl-12" id="add-skill">
 							<div class="dashboard-box">
 
 								<!-- Headline -->
 								<div class="headline">
-									<h3><i class="icon-material-outline-face"></i> My Profile</h3>
+									<h3><i class="icon-material-outline-face" ></i> My Profile</h3>
 								</div>
 
 								<div class="content">
@@ -262,13 +283,13 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 
 												<div class="col-xl-12">
 													<div class="submit-field">
-														<h5>Add Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
+														<h5 >Add Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
 
 														<!-- Skills List -->
 														<div class="keywords-container">
 															<div class="col-6 keyword-input-container">
 																<select id="add-skills" class="keyword-input with-border custom-select">
-																	<option value="">Select a skill...</option>
+																	<!--<option value="">Select a skill...</option>-->
 																</select>
 																<button type="button" class="keyword-input-button ripple-effect" style="margin-right:25px"><i class="icon-material-outline-add"></i></button>
 															</div>
@@ -311,6 +332,9 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 											<div class="submit-field">
 												<h5>Current Password</h5>
 												<input id="old-password" name="old-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password1">
+                                                    Show
+                                                </span>
 											</div>
 										</div>
 
@@ -318,6 +342,9 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 											<div class="submit-field">
 												<h5>New Password</h5>
 												<input id="new-password" name="new-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password2">
+                                                    Show
+                                                </span>
 											</div>
 										</div>
 
@@ -325,6 +352,9 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 											<div class="submit-field">
 												<h5>Repeat New Password</h5>
 												<input id="r-new-password" name="r-new-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password3">
+                                                    Show
+                                                </span>
 											</div>
 										</div>
 									</div>
@@ -340,6 +370,15 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 				</div>
 
 				<!-- Row / End -->
+				
+				<div class="dashboard-footer-spacer"></div>
+			<div class="small-footer margin-top-15">
+				<div class="small-footer-copyrights">
+					© 2023 <strong><a href="mailto:m.maazfaisal0301@gmail.com"> Developed by Muhammad Maaz Faisal</a></strong>. All Rights Reserved.
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<!-- Footer / End -->
 
 			</div>
 		</div>
@@ -372,6 +411,8 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 	<script src="js/custom.js"></script>
 	<script src="js/sweetalert2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 
 	<!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
 	<script src="js/chart.min.js"></script>
@@ -389,7 +430,48 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 				}
 			});
 		}
+		
+		$('#show-password1').on('click', function () {
+            var passwordField = $('#old-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
+         $('#show-password2').on('click', function () {
+            var passwordField = $('#new-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
+         $('#show-password3').on('click', function () {
+            var passwordField = $('#r-new-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
 		$(document).ready(function() {
+		   
 			$('.custom-select').selectize({
 				sortField: 'text'
 			});
@@ -418,6 +500,10 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 							};
 							add_skill.addOption(newOption);
 						}
+					 if (window.location.hash === "#add-skill") {
+      $('html, body').animate({
+        scrollTop: $('#add-skill').offset().top}, 1000); 
+    }
 					}
 				}
 			});
@@ -434,7 +520,55 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 					console.log(data);
 					$('#name').val(data.data.name);
 					$('#email').val(data.data.email);
-					$('#phone').val(data.data.phone);
+					var phoneNumber = data.data.phone;
+					 var countryCodeInput = document.querySelector("#country-code");
+
+                    // Set the phone input field with the extracted phone number
+                    var phoneInput = document.querySelector("#phone");
+                    phoneInput.value = "+"+phoneNumber;
+            
+                    // Initialize intl-tel-input without specifying an initial country
+                    var iti = window.intlTelInput(phoneInput, {
+                        separateDialCode: true,
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+                    });
+            
+                    // Listen for country change event and update the hidden input
+                    iti.promise.then(function () {
+                        phoneInput.addEventListener("countrychange", function (e) {
+                            var selectedCountry = iti.getSelectedCountryData();
+                            countryCodeInput.value = "+" + selectedCountry.dialCode;
+                        });
+                    });
+                    var selectedCountry = iti.getSelectedCountryData();
+                            countryCodeInput.value = "+" + selectedCountry.dialCode;
+                    phoneInput.value=phoneNumber.substring((selectedCountry.dialCode).length);
+                    
+                    
+                    var mphoneNumber = data.data.mobile;
+					 var mcountryCodeInput = document.querySelector("#mcountry-code");
+
+                    // Set the phone input field with the extracted phone number
+                    var mphoneInput = document.querySelector("#mphone");
+                    mphoneInput.value = "+"+mphoneNumber;
+            
+                    // Initialize intl-tel-input without specifying an initial country
+                    var miti = window.intlTelInput(mphoneInput, {
+                        separateDialCode: true,
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+                    });
+            
+                    // Listen for country change event and update the hidden input
+                    miti.promise.then(function () {
+                        phoneInput.addEventListener("countrychange", function (e) {
+                            var mselectedCountry = miti.getSelectedCountryData();
+                            mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
+                        });
+                    });
+                    var mselectedCountry = miti.getSelectedCountryData();
+                            mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
+                    mphoneInput.value=mphoneNumber.substring((mselectedCountry.dialCode).length);
+        
 					$('#description').val(data.data.description);
 					if (data.skills.length > 0) {
 						data.skills.forEach(function(skill) {
@@ -443,19 +577,25 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 					}
 					if (data.data.type == 'user') {
 						$('#freelancer').prop('checked', true);
-						document.getElementById('employer').disabled = true;
-					} else {
-						$('#employer').prop('checked', true);
-						document.getElementById('freelancer').disabled = true;
-					}
-
+					} 
+				 if (window.location.hash === "#add-skill") {
+      $('html, body').animate({
+        scrollTop: $('#add-skill').offset().top}, 1000); 
+    }
+					
 
 				}
 			});
 		});
+		
 		$(document).on('submit', '#profile', function(e) {
 			e.preventDefault();
 			var form = new FormData(this);
+			phone = $('#phone').val();
+    		var countryCode = $('#country-code').val();
+    		var phoneNumber=countryCode+phone;
+    		var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
+    		form.set('phone', sanitizedPhoneNumber);
 			var skills = document.querySelectorAll('#skills-container .keyword-text');
 			if (skills.length > 0) {
 				skills.forEach(function(skill) {

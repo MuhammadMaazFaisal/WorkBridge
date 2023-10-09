@@ -8,6 +8,25 @@ include 'layout/header.php';
 	.fields-ul > li{
 			border-bottom: none !important;
 		}
+		
+	.toggle-password {
+        position: absolute;
+        top: 45%;
+        right: 25px;
+        cursor: pointer;
+        color:#2a41e8;
+    }
+    
+    .toggle-password i {
+        font-size: 18px;
+        color: #888;
+        transition: color 0.3s;
+    }
+    
+    .toggle-password:hover i {
+        color: #333; /* Change color on hover for better visibility */
+    }	
+	
 </style>
 
 <!-- Dashboard Container -->
@@ -70,7 +89,8 @@ include 'layout/header.php';
 											<div class="col-xl-6">
 												<div class="submit-field">
 													<h5>Phone Number</h5>
-													<input id="phone" name="phone" type="text" class="with-border" value="" placeholder="e.g. 913152389052">
+													<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052" required />
+                                                    <input type="hidden" id="country-code" name="country_code" value="" /> 
 												</div>
 											</div>
 
@@ -79,11 +99,6 @@ include 'layout/header.php';
 												<div class="submit-field">
 													<h5>Account Type</h5>
 													<div class="account-type">
-														<div>
-															<input type="radio" name="freelancer" id="freelancer" class="account-type-radio" />
-															<label for="freelancer" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Freelancer</label>
-														</div>
-
 														<div>
 															<input type="radio" name="employer" id="employer" class="account-type-radio" />
 															<label for="employer" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Employer</label>
@@ -108,7 +123,7 @@ include 'layout/header.php';
 					</div>
 
 					<!-- Dashboard Box -->
-					<div class="col-xl-12">
+					<div class="col-xl-12" id="add-skill">
 						<div class="dashboard-box">
 
 							<!-- Headline -->
@@ -164,30 +179,39 @@ include 'layout/header.php';
 								<h3><i class="icon-material-outline-lock"></i> Password & Security</h3>
 							</div>
 
-							<div class="content with-padding">
-								<div class="row">
-									<div class="col-xl-4">
-										<div class="submit-field">
-											<h5>Current Password</h5>
-											<input id="old-password" name="old-password" type="password" class="with-border">
+								<div class="content with-padding">
+									<div class="row">
+										<div class="col-xl-4">
+											<div class="submit-field">
+												<h5>Current Password</h5>
+												<input id="old-password" name="old-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password1">
+                                                    Show
+                                                </span>
+											</div>
 										</div>
-									</div>
 
-									<div class="col-xl-4">
-										<div class="submit-field">
-											<h5>New Password</h5>
-											<input id="new-password" name="new-password" type="password" class="with-border">
+										<div class="col-xl-4">
+											<div class="submit-field">
+												<h5>New Password</h5>
+												<input id="new-password" name="new-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password2">
+                                                    Show
+                                                </span>
+											</div>
 										</div>
-									</div>
 
-									<div class="col-xl-4">
-										<div class="submit-field">
-											<h5>Repeat New Password</h5>
-											<input id="r-new-password" name="r-new-password" type="password" class="with-border">
+										<div class="col-xl-4">
+											<div class="submit-field">
+												<h5>Repeat New Password</h5>
+												<input id="r-new-password" name="r-new-password" type="password" class="with-border">
+												<span class="toggle-password" id="show-password3">
+                                                    Show
+                                                </span>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
 						</div>
 					</div>
 
@@ -243,7 +267,30 @@ include 'layout/header.php';
 				console.log(data);
 				$('#name').val(data.data.name);
 				$('#email').val(data.data.email);
-				$('#phone').val(data.data.phone);
+			    var phoneNumber = data.data.phone;
+				var countryCodeInput = document.querySelector("#country-code");
+
+                // Set the phone input field with the extracted phone number
+                var phoneInput = document.querySelector("#phone");
+                phoneInput.value = "+"+phoneNumber;
+        
+                // Initialize intl-tel-input without specifying an initial country
+                var iti = window.intlTelInput(phoneInput, {
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+                });
+        
+                // Listen for country change event and update the hidden input
+                iti.promise.then(function () {
+                    phoneInput.addEventListener("countrychange", function (e) {
+                        var selectedCountry = iti.getSelectedCountryData();
+                        countryCodeInput.value = "+" + selectedCountry.dialCode;
+                    });
+                });
+                var selectedCountry = iti.getSelectedCountryData();
+                countryCodeInput.value = "+" + selectedCountry.dialCode;
+                phoneInput.value=phoneNumber.substring((selectedCountry.dialCode).length);
+                    
 				$('#description').val(data.data.description);
 				if (data.skills.length > 0) {
 					data.skills.forEach(function(skill) {
@@ -257,14 +304,63 @@ include 'layout/header.php';
 					$('#employer').prop('checked', true);
 					document.getElementById('freelancer').disabled = true;
 				}
+				if (window.location.hash === "#add-skill") {
+      $('html, body').animate({
+        scrollTop: $('#add-skill').offset().top}, 1000); 
+    }
 
 
 			}
 		});
 	});
+	
+		$('#show-password1').on('click', function () {
+            var passwordField = $('#old-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
+         $('#show-password2').on('click', function () {
+            var passwordField = $('#new-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+        
+         $('#show-password3').on('click', function () {
+            var passwordField = $('#r-new-password');
+            var passwordFieldType = passwordField.attr('type');
+            
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).text('Hide');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).text('Show');
+            }
+        });
+	
 	$(document).on('submit', '#profile', function(e) {
 		e.preventDefault();
 		var form = new FormData(this);
+		phone = $('#phone').val();
+		var countryCode = $('#country-code').val();
+		var phoneNumber=countryCode+phone;
+		var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
+		form.set('phone', sanitizedPhoneNumber);
 		var skills = document.querySelectorAll('#skills-container .keyword-text');
 		if (skills.length > 0) {
 			skills.forEach(function(skill) {

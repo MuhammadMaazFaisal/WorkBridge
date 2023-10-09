@@ -93,7 +93,7 @@ include 'layout/header.php';
                     </div>
                     
                     <!-- Add an input field for verification code -->
-                    <div class="input-with-icon-left">
+                    <div class="input-with-icon-left" id="area" style="display:none">
                         <i class="icon-line-awesome-key"></i>
                         <input type="text" class="input-text with-border" name="verification_code" id="verification_code" placeholder="Verification Code" />
                     </div>
@@ -143,9 +143,7 @@ include 'layout/footer.php';
         e.preventDefault();
         var form = new FormData(this);
         var v_code= document.getElementById("verification_code").value;
-        console.log(v_code);
         if (v_code!=""){
-            console.log("check code")
             form.append('function', 'CheckCode'); // Change the function name accordingly
             $.ajax({
                 url: 'include/functions.php',
@@ -182,6 +180,8 @@ include 'layout/footer.php';
                     	if (data.status == 'success') {
                     	    let code_btn=document.getElementById("code-btn");
                     	    code_btn.innerHTML="Verify Code";
+                    	    let area= document.getElementById("area");
+                    	    area.style="display:inline";
 					Swal.fire({
 						icon: 'success',
 						title: 'Success',

@@ -29,6 +29,18 @@
 								<li><a href="dashboard-post-a-task.php">Post a Task</a></li>
 							</ul>
 						</li>
+					
+						<li><a href="#"><i class="icon-feather-users"></i> Freelancers</a>
+							<ul>
+								<li><a href="dashboard-manage-freelancers.php">Manage Freelancers</a></li>
+							</ul>
+						</li>
+							<li><a href="#"><i class="icon-material-outline-assessment"></i>Skills</a>
+							<ul>
+								<li><a href="/admin/dashboard-settings.php#add-skill">Add Skills</a></li>
+							</ul>
+						</li>
+						
 					</ul>
 
 					<ul data-submenu-title="Account">

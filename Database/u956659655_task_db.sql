@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 10, 2023 at 10:33 AM
+-- Generation Time: Oct 09, 2023 at 05:17 AM
 -- Server version: 10.6.14-MariaDB-cll-lve
 -- PHP Version: 7.2.34
 
@@ -35,17 +35,6 @@ CREATE TABLE `bids` (
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `bids`
---
-
-INSERT INTO `bids` (`id`, `u_id`, `p_id`, `status`, `date`) VALUES
-(1, 3, 15, 'Not Interested', '2023-08-25 12:16:57'),
-(2, 3, 17, 'Not Interested', '2023-08-28 17:02:01'),
-(3, 9, 18, 'Not Interested', '2023-09-05 04:46:14'),
-(4, 15, 19, 'Interested', '2023-09-07 13:54:15'),
-(5, 15, 15, 'Interested', '2023-09-07 13:54:25');
-
 -- --------------------------------------------------------
 
 --
@@ -69,11 +58,8 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `name`, `category`, `budget`, `description`, `upload`, `deadline`, `status`, `date`) VALUES
-(15, 'Web Development', 'Software Developing', 300, 'Hi, You have created good website.', NULL, '2023-08-30', 'Open', '2023-08-25 12:10:20'),
-(16, 'Graphic Designing', 'Design & Creative', 70, 'dasd', NULL, '2023-08-31', 'Closed', '2023-08-25 12:53:26'),
-(17, 'projec11', 'Data Analytics', 70, 'asd', NULL, '2023-08-30', 'Open', '2023-08-25 19:10:51'),
-(18, 'web management', 'IT & Networking', 40, 'wewerf \r\njduic ifj\r\n;lscojui \r\ncinsmclx\r\nrtrtt\r\ntgrt', NULL, '2023-09-08', 'Open', '2023-08-29 03:53:21'),
-(19, 'web management12', 'Admin Support', 21, 'eae', '../images/upload/472310-brandon-lam-Dd_7xDCuuUo-unsplash.jpg', '2023-09-05', 'Open', '2023-09-05 18:05:49');
+(20, 'web ', 'Software Developing', 25, 'TASk', NULL, '2023-09-14', 'Open', '2023-09-14 15:39:16'),
+(21, 'Logo', 'Design & Creative', 10, 'logo', NULL, '2023-09-14', 'Open', '2023-09-14 15:39:48');
 
 -- --------------------------------------------------------
 
@@ -92,12 +78,8 @@ CREATE TABLE `project_skills` (
 --
 
 INSERT INTO `project_skills` (`id`, `p_id`, `s_id`) VALUES
-(18, 15, 51),
-(19, 16, 50),
-(24, 17, 50),
-(40, 18, 49),
-(41, 18, 52),
-(54, 19, 50);
+(55, 20, 54),
+(56, 21, 55);
 
 -- --------------------------------------------------------
 
@@ -116,11 +98,36 @@ CREATE TABLE `skills` (
 --
 
 INSERT INTO `skills` (`id`, `name`, `status`) VALUES
-(49, 'ui ux', 'active'),
-(50, 'angular', 'active'),
-(51, 'laravel', 'inactive'),
-(52, 'sas', 'active'),
-(53, 'asa', 'active');
+(54, 'react', 'active'),
+(55, 'laravel', 'active'),
+(56, 'ass', 'active'),
+(57, 'asdw', 'active'),
+(58, 'wedw', 'active'),
+(59, 'qww', 'active'),
+(60, 'qqq', 'active'),
+(61, 'qqq', 'active'),
+(62, 'aaa', 'active'),
+(63, 'ddd', 'active'),
+(64, 'ccc', 'active'),
+(65, 'qwew', 'active'),
+(66, 'wqwqd', 'active'),
+(67, 'wedc', 'active'),
+(68, 'wedwed', 'active'),
+(69, 'wferf', 'active'),
+(70, 'dwed', 'active'),
+(71, 'ewdew', 'active'),
+(72, 'dewd', 'active'),
+(73, 'ede', 'active'),
+(74, 'wede', 'active'),
+(75, 'cc', 'active'),
+(76, 'www', 'active'),
+(77, 'qwqq', 'active'),
+(78, 'ddd', 'active'),
+(79, 'aaa', 'active'),
+(80, 'hyh', 'active'),
+(81, 'hyh', 'active'),
+(82, 'hyh', 'active'),
+(83, 'hyh', 'active');
 
 -- --------------------------------------------------------
 
@@ -132,33 +139,24 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
   `description` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `v_code` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `date` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `description`, `type`, `password`, `v_code`, `status`) VALUES
-(1, 'Admin', 'admin@gmail.com', '923122345662', '', 'admin', '$2y$10$HJf7sh.ud1j6dijYto8//uYigUMXQZvPBtyWh8x6zM1M1y.Mq8V/K', '', 'active'),
-(3, 'Musadiq Mustafa', 'm.maazfaisal0302@gmail.com', '923122345662', '', 'user', '$2y$10$SbTy6wTGRY7ISXPH5VjgEunXMwEomH8h8gXdst.B4Fjj9/TFTTUQm', '402247', 'active'),
-(4, '123', '123@example.com', '923122345662', '', 'user', '$2y$10$uj5B/9hJw2/lYmBRT/4x2OxYMVbl4VqNanpMRmpFoabPmHqRXAsS6', '', 'active'),
-(5, '123', '1234@example.com', '913012453295', '', 'user', '$2y$10$Mp1Z5cJ7/KlHQn9qRRN.F.Uta1P3ZkSGSweqUDIIgjTyiFJtemBmm', '', 'active'),
-(6, '321', '321@gmail.com', '447700900381', '', 'user', '$2y$10$VJLbxFD1SOE1phdyl.5m.OIWKQci3uttXcBxfO5PMj5H24SCikjG6', '', 'active'),
-(7, '123', '123@example.co', '231223123', '', 'user', '$2y$10$M77A7AMpF.uonyOifxebBe9nXuSWHTpybeqiHpbEyzXHbC/iWEeo6', '', 'active'),
-(8, 'maaz', 'admin1@gmail.com', '03122345662', '', 'user', '$2y$10$HJf7sh.ud1j6dijYto8//uYigUMXQZvPBtyWh8x6zM1M1y.Mq8V/K', '', 'active'),
-(9, 'sdd', 'extraahour@gmail.com', '97868768760', '', 'user', '1234', '', 'active'),
-(10, 'saD', 'AS@GMAIL.COM', '+9231213213312', '', 'user', '$2y$10$ClcL9L7.iGwLR6EwCBHe5ODHee5sWSHPET3FmIu79YTN3zDwqE9QS', '', 'active'),
-(11, 'maaz', '123456@example.com', '3702312231232', '', 'user', '$2y$10$1fXwCAzvhfjXnTwATRdb..GxRp2y7KxmT4/S9W6PdB330tksLLjWy', '', 'active'),
-(12, 'Maaz', 'iamemmarose1@gmail.com', '923122345662', '', 'user', '$2y$10$jEy2B9WVchqaETOOVhIskuzExCILKZTDZJ9OJfHgfocwuYIvrvgO2', '', 'active'),
-(13, '123', 'admin2@gmail.com', '12312321', '', 'user', '$2y$12$xJpUsRtPlks2ahA6srh4PeCgO4eGMqoMRxs/odUV34up4MAo4RJoG', '', 'active'),
-(14, 'maaz', 'maaz@gmail.com', '132131', '', 'user', '123', '', 'active'),
-(15, 'sinoy', 'rahamatis001@gmail.com', '917356783548', '', 'user', 'rahamatis', '', 'active');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `mobile`, `description`, `type`, `password`, `v_code`, `status`, `date`) VALUES
+(1, 'Admin', 'admin@gmail.com', '923122345662', '', '', 'admin', '$2y$10$BKkAHW2nOez1RR82hOlmYeTEWlUk0TKLo3PaU1CCl6urfhS/w13zW', '', 'active', '2023-09-16'),
+(19, 'senio', 'rahamatis001@gmail.com', '447678786712', '', '', 'user', 'rahamatis', '', 'active', '2023-09-29'),
+(24, 'Muhammad Maaz', 'm.maazfaisal0302@gmail.com', '923122345661', '923122345662', '', 'user', '$2y$10$YVTTGaxYZ8.WOfWxWRitH.iLX.Y1.YPkPaBZKZUZcbSGYNkhadxc.', '791650', 'active', '2023-10-09');
 
 -- --------------------------------------------------------
 
@@ -177,10 +175,10 @@ CREATE TABLE `user_skills` (
 --
 
 INSERT INTO `user_skills` (`id`, `u_id`, `s_id`) VALUES
-(8, 3, 50),
-(9, 9, 49),
-(10, 9, 50),
-(11, 15, 50);
+(48, 19, 54),
+(49, 19, 55),
+(54, 24, 62),
+(55, 24, 79);
 
 --
 -- Indexes for dumped tables
@@ -236,37 +234,37 @@ ALTER TABLE `user_skills`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `project_skills`
 --
 ALTER TABLE `project_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `user_skills`
 --
 ALTER TABLE `user_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- Constraints for dumped tables

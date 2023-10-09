@@ -47,6 +47,12 @@ if ($_POST['function'] == 'add-task') {
     ResetPassword();
 } elseif ($_POST['function'] == 'CheckCode') {
     CheckCode();
+} elseif ($_POST['function'] == 'FreelancerStatusChange') {
+    FreelancerStatusChange();
+} elseif ($_POST['function'] == 'GetFreelancers') {
+    GetFreelancers();
+} elseif ($_POST['function'] == 'GetBidderTasks') {
+    GetBidderTasks();
 }
 
 function SendCode(){
@@ -343,38 +349,44 @@ function Login()
     $stmt->bindParam(':email', $_POST['email']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        // If the user is found, check the password
-        if (password_verify($_POST['password'], $result['password'])) {
-            $sql1 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
-            $stmt1 = $conn->prepare($sql1);
-            $stmt1->bindParam(':u_id', $result['id']);
-            $stmt1->execute();
-            $skill = "User has no skills";
-            if ($stmt1->rowCount() > 0) {
-                $skill = "User has skills";
-            }
-            $array['status'] = 'success';
-            $array['message'] = 'Login Success';
-            $array['user_type'] = $result['type'];
-            session_start();
-            $_SESSION['user_id'] = $result['id'];
-            $_SESSION['user_name'] = $result['name'];
-            $_SESSION['user_email'] = $result['email'];
-            $_SESSION['user_type'] = $result['type'];
-            $_SESSION['user_skill'] = $skill;
-            $_SESSION['status'] = 'logged_in';
-            $array['session'] = $_SESSION;
-        } else {
-            // Password is incorrect
-            $array['status'] = 'error';
-            $array['message'] = 'Invalid Password';
-        }
-    } else {
-        // If the user is not found, return an error message
+    
+    if ($result['status']=='inactive'){
         $array['status'] = 'error';
-        $array['message'] = 'Invalid Email';
+        $array['message'] = 'Your Account has been blocked!';
+    }else{
+        if ($result) {
+            // If the user is found, check the password
+            if (password_verify($_POST['password'], $result['password'])) {
+                $sql1 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
+                $stmt1 = $conn->prepare($sql1);
+                $stmt1->bindParam(':u_id', $result['id']);
+                $stmt1->execute();
+                $skill = "User has no skills";
+                if ($stmt1->rowCount() > 0) {
+                    $skill = "User has skills";
+                }
+                $array['status'] = 'success';
+                $array['message'] = 'Login Success';
+                $array['user_type'] = $result['type'];
+                session_start();
+                $_SESSION['user_id'] = $result['id'];
+                $_SESSION['user_name'] = $result['name'];
+                $_SESSION['user_email'] = $result['email'];
+                $_SESSION['user_type'] = $result['type'];
+                $_SESSION['user_phone'] = $result['phone'];
+                $_SESSION['user_skill'] = $skill;
+                $_SESSION['status'] = 'logged_in';
+                $array['session'] = $_SESSION;
+            } else {
+                // Password is incorrect
+                $array['status'] = 'error';
+                $array['message'] = 'Invalid Password';
+            }
+        } else {
+            // If the user is not found, return an error message
+            $array['status'] = 'error';
+            $array['message'] = 'Invalid Email';
+        }
     }
 
     echo json_encode($array);
@@ -383,6 +395,8 @@ function Login()
 function Register()
 {
     include 'connection.php';
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
     $array = array();
     $sql0 = "SELECT * FROM users WHERE email=:email";
     $stmt0 = $conn->prepare($sql0);
@@ -393,11 +407,14 @@ function Register()
         $array['status'] = 'error';
         $array['message'] = 'Email already exists';
     } else {
-        $sql = "INSERT INTO users (name, email, phone, description, password, type, status) VALUES (:name, :email, :phone,'', :password, 'user', 'active')";
+        $phone=$_POST['phone'] ? $_POST['phone'] : '';
+        $wphone=$_POST['w_phone'] ? $_POST['w_phone'] : $_POST['phone'];
+        $sql = "INSERT INTO users (name, email, phone, mobile, description, password, type, status) VALUES (:name, :email, :phone, :mobile,'', :password, 'user', 'active')";
         $stmt = $conn->prepare($sql);
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $stmt->bindParam(':name', $_POST['name']);
-        $stmt->bindParam(':phone', $_POST['phone']);
+        $stmt->bindParam(':mobile', $phone);
+        $stmt->bindParam(':phone', $wphone);
         $stmt->bindParam(':email', $_POST['email']);
         $stmt->bindParam(':password', $password);
         $result = $stmt->execute();
@@ -497,12 +514,51 @@ function GetTasks()
     echo json_encode($array);
 }
 
+function GetFreelancers()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE u_id = users.id and bids.status='Interested') as bids FROM users where users.type='user' ORDER BY date DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Get Tasks Success';
+        $array['data'] = $result;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Get Tasks Failed';
+    }
+    echo json_encode($array);
+}
+
 function GetActiveTasks()
 {
     include 'connection.php';
     $array = array();
     $sql = "SELECT *, (SELECT COUNT(*) FROM bids WHERE p_id = projects.id and bids.status='Interested') as bids FROM projects where status='Open' ORDER BY date DESC";
     $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Get Tasks Success';
+        $array['data'] = $result;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Get Tasks Failed';
+    }
+    echo json_encode($array);
+}
+
+function GetBidderTasks()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT b.*, p.* FROM bids AS b JOIN projects AS p ON b.p_id = p.id WHERE b.u_id = :u_id and b.status='Interested' ORDER BY b.date DESC;";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':u_id', $_POST['u_id']);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if ($result) {
@@ -580,6 +636,36 @@ function TaskStatusChange()
     }
 
 
+
+    echo json_encode($array);
+}
+
+function FreelancerStatusChange()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT status FROM users WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $_POST['id']);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sql1 = "UPDATE users SET status=:status WHERE id=:id";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bindParam(':id', $_POST['id']);
+    if ($result['status'] == 'active') {
+        $status = 'inactive';
+    } else {
+        $status = 'active';
+    }
+    $stmt1->bindParam(':status', $status);
+    $result1 = $stmt1->execute();
+    if ($result1) {
+        $array['status'] = 'success';
+        $array['message'] = 'Freelancer Status Changed to ' . $status;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Freelancer Status could not be changed';
+    }
 
     echo json_encode($array);
 }
@@ -830,6 +916,30 @@ function UpdateUserProfile()
         }, $s_ids));
         $stmt4 = $conn->prepare($sql4);
         $stmt4->execute();
+        
+        $sql01 = "SELECT * FROM users WHERE email=:email";
+        $stmt01 = $conn->prepare($sql01);
+        $stmt01->bindParam(':email', $email);
+        $stmt01->execute();
+        $result01 = $stmt01->fetch(PDO::FETCH_ASSOC);
+        $sql012 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
+        $stmt012 = $conn->prepare($sql012);
+        $stmt012->bindParam(':u_id', $result01['id']);
+        $stmt012->execute();
+        $skill = "User has no skills";
+        if ($stmt012->rowCount() > 0) {
+            $skill = "User has skills";
+        }
+        $array['user_type'] = $result01['type'];
+        session_start();
+        $_SESSION['user_id'] = $result01['id'];
+        $_SESSION['user_name'] = $result01['name'];
+        $_SESSION['user_email'] = $result01['email'];
+        $_SESSION['user_type'] = $result01['type'];
+        $_SESSION['user_phone'] = $result01['phone'];
+        $_SESSION['user_skill'] = $skill;
+        $_SESSION['status'] = 'logged_in';
+        $array['Session']= $_SESSION;
         $array['status'] = 'success';
         $array['message'] = "Profile Updated Successfully";
     } else {
@@ -1121,9 +1231,12 @@ function FilterTasks()
         $sql .= ' AND id IN (SELECT p_id FROM project_skills WHERE s_id IN (' . implode(',', $skills) . '))';
     }
 
-    if (!empty($categories)) {
+    if (!empty($categories) && !in_array('All Categories', $categories)) {
         $sql .= ' AND category IN ("' . implode('","', $categories) . '")';
     }
+    
+    $sql .= ' ORDER BY date DESC';
+    
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();

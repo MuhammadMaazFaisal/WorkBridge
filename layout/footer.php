@@ -8,7 +8,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xl-12">
-				© 2023 <strong><a href="mailto:m.maazfaisal0301@gmail.com"> Developed by Muhammad Maaz Faisal</a></strong>. All Rights Reserved.
+				© 2023 <strong><a href=""> </a></strong>. All Rights Reserved.
 				</div>
 			</div>
 		</div>
@@ -24,6 +24,7 @@
 
 <!-- Scripts
 ================================================== -->
+
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/jquery-migrate-3.0.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.6.0/pagination.js" integrity="sha512-VE1SVJJWxA3banvl97A4IXikhIwyPWwWAjST8kHzvnUxSI7eoKblUceEpUHGfnuFx+7GszvViiDW9+0NlZJe3A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

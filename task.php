@@ -77,6 +77,7 @@ include 'layout/header.php';
 
                             <ul class="user-menu-small-nav">
                                 <li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
+								<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
                                 <li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
                             </ul>
 
@@ -193,6 +194,86 @@ include 'layout/header.php';
 
     </div>
 </div>
+<style>
+	.selectize-input {
+		padding: 13px 10px !important;
+		height: 45px !important;
+	}
+
+	input[type="select-one"] {
+		height: 24px !important;
+	}
+	.custom-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-dialog {
+  position: relative;
+  margin: auto;
+  top: 20%;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 15px;
+  background: #f1f1f1;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center; /* Center-aligns the button */
+}
+
+.modal-body {
+  padding: 15px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: blue;
+}
+
+
+</style>
+
+<div class="custom-modal" id="customModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Details</h5>
+      </div>
+      <div class="modal-body">
+        Please Update your Skills and WhatsApp number so that you can receive WhatsApp notification whenever there is a new task posted related to your skills.
+      </div>
+      <div class="modal-footer">
+        <a href="/settings.php#add-skill"><button type="button" class="btn btn-primary">Add Details</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <!-- Spacer -->
@@ -206,9 +287,15 @@ include 'layout/footer.php';
 
 <script>
     $(document).ready(function() {
+                
+<?php if($_SESSION['user_phone']=='' || $_SESSION['user_skill']=='User has no skills'){ ?>
+ $('#customModal').css('display', 'block');
+<?php } ?>
         var url_string = window.location.href;
         var url = new URL(url_string);
         var id = url.searchParams.get("task_id");
+        
+        
         $.ajax({
             url: "include/functions.php",
             type: "POST",

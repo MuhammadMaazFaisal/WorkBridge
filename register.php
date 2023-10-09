@@ -92,11 +92,30 @@ include 'layout/header.php';
 						<i class="icon-material-outline-person-pin"></i>
 						<input type="text" class="input-text with-border" name="name" id="name" placeholder="Full Name" required />
 					</div>
+					 <label style="color: royalblue">Phone Number</label>
 					<div class="input-with-icon-left">
+					   
                         <i class="icon-feather-phone"></i>
+                        
                         <input type="tel" class="input-text with-border" name="phone" id="phone" placeholder="e.g. 3152389052" required />
                         <input type="hidden" id="country-code" name="country_code" value="+1" /> <!-- Default country code -->
                     </div>
+                    <div style="display:none;" id="whatsapp-area">
+                    <label style="color: royalblue">Whatsapp Number</label>
+                    <div class="input-with-icon-left" >
+                        <i class="icon-feather-phone"></i>
+                        <input type="tel" class="input-text with-border" name="w_phone" id="w-phone" placeholder="e.g. 3152389052" />
+                        <input type="hidden" id="w-country-code" name="w_country_code" value="+1" /> <!-- Default country code -->
+                    </div>
+                    </div>
+                    <div class="row" id="check-area">
+                        <div class="col-2">
+                        <input type="checkbox" style="height: fit-content;margin-top:6px;margin-left:30px;" class="input-text with-border" name="has-whatsapp" id="has-whatsapp" placeholder="e.g. 3152389052" />
+                        </div>
+                        <div class="col-10"><label for="has-whatsapp">I have different Whatsapp Number</label></div>
+                    </div>
+                    <div class="col-12"><label style="color: red">Whatsapp is important for Task Posts Notification</label></div>
+                    
 					<div class="input-with-icon-left">
 						<i class="icon-material-baseline-mail-outline"></i>
 						<input type="email" class="input-text with-border" name="email" id="email" placeholder="Email Address" required />
@@ -139,6 +158,18 @@ include 'layout/footer.php';
 ?>
 <script>
      $(document).ready(function () {
+        var wcheckbox=document.querySelector("#has-whatsapp");
+        wcheckbox.addEventListener("change", function (e) {
+            var whatsapp=document.querySelector("#whatsapp-area");
+            if(this.checked){
+                whatsapp.style="display:inline";
+            }else{
+                whatsapp.style="display:none";
+            
+            }
+            });
+         
+         
         var phoneInput = document.querySelector("#phone");
         var countryCodeInput = document.querySelector("#country-code");
     
@@ -153,6 +184,23 @@ include 'layout/footer.php';
             phoneInput.addEventListener("countrychange", function (e) {
                 var selectedCountry = iti.getSelectedCountryData();
                 countryCodeInput.value = "+" + selectedCountry.dialCode;
+            });
+        });
+        
+        var wphoneInput = document.querySelector("#w-phone");
+        var wcountryCodeInput = document.querySelector("#w-country-code");
+    
+        // Initialize intl-tel-input
+        var witi = window.intlTelInput(wphoneInput, {
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+        });
+    
+        // Listen for country change event and update the hidden input
+        witi.promise.then(function () {
+            wphoneInput.addEventListener("countrychange", function (e) {
+                var wselectedCountry = witi.getSelectedCountryData();
+                wcountryCodeInput.value = "+" + wselectedCountry.dialCode;
             });
         });
          
@@ -195,8 +243,14 @@ include 'layout/footer.php';
 		var countryCode = $('#country-code').val();
 		var phoneNumber=countryCode+phone;
 		var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
-		console.log(sanitizedPhoneNumber);
 		form.set('phone', sanitizedPhoneNumber);
+		var wphone = $('#w-phone').val();
+		if (wphone!= ""){
+		var wcountryCode = $('#w-country-code').val();
+		var wphoneNumber=wcountryCode+wphone;
+		var wsanitizedPhoneNumber = wphoneNumber.replace(/\+/g, '');
+		    	form.set('w_phone', wsanitizedPhoneNumber);
+		}
 		if (password != password_repeat) {
 			Swal.fire({
 				title: 'Registration failed!',
