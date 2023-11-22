@@ -192,7 +192,7 @@
 <script src="../js/bootstrap-select.min.js"></script>
 <script src="../js/snackbar.js"></script>
 <script src="../js/clipboard.min.js"></script>
-<script src="../js/counterup.min.js"></script>
+<!-- <script src="../js/counterup.min.js"></script> -->
 <script src="../js/magnific-popup.min.js"></script>
 <script src="../js/slick.min.js"></script>
 <script src="../js/custom.js"></script>

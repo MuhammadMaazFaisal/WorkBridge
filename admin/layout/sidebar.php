@@ -37,7 +37,7 @@
 						</li>
 							<li><a href="#"><i class="icon-material-outline-assessment"></i>Skills</a>
 							<ul>
-								<li><a href="/admin/dashboard-settings.php#add-skill">Add Skills</a></li>
+								<li><a href="/admin/dashboard-add-skills.php">Add Skills</a></li>
 							</ul>
 						</li>
 						
