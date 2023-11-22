@@ -232,7 +232,7 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												<div class="col-xl-4">
 													<div class="submit-field">
 														<h5>Whatsapp Number</h5>
-														<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052" required />
+														<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052"/>
                                                         <input type="hidden" id="country-code" name="country_code" value="" /> 
 													</div>
 												</div>
@@ -540,8 +540,9 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
                             countryCodeInput.value = "+" + selectedCountry.dialCode;
                         });
                     });
+                    
                     var selectedCountry = iti.getSelectedCountryData();
-                            countryCodeInput.value = "+" + selectedCountry.dialCode;
+                    countryCodeInput.value = "+" + selectedCountry.dialCode;
                     phoneInput.value=phoneNumber.substring((selectedCountry.dialCode).length);
                     
                     
@@ -550,7 +551,9 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 
                     // Set the phone input field with the extracted phone number
                     var mphoneInput = document.querySelector("#mphone");
+                    if (data.data.mobile !=''){
                     mphoneInput.value = "+"+mphoneNumber;
+                    }
             
                     // Initialize intl-tel-input without specifying an initial country
                     var miti = window.intlTelInput(mphoneInput, {
@@ -565,10 +568,11 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
                             mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
                         });
                     });
+                    if (data.data.mobile !=''){
                     var mselectedCountry = miti.getSelectedCountryData();
                             mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
                     mphoneInput.value=mphoneNumber.substring((mselectedCountry.dialCode).length);
-        
+                    }
 					$('#description').val(data.data.description);
 					if (data.skills.length > 0) {
 						data.skills.forEach(function(skill) {
@@ -596,6 +600,11 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
     		var phoneNumber=countryCode+phone;
     		var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
     		form.set('phone', sanitizedPhoneNumber);
+    		mphone = $('#mphone').val();
+    		var mcountryCode = $('#mcountry-code').val();
+    		var mphoneNumber=mcountryCode+mphone;
+    		var msanitizedPhoneNumber = mphoneNumber.replace(/\+/g, '');
+    		form.set('mphone', msanitizedPhoneNumber);
 			var skills = document.querySelectorAll('#skills-container .keyword-text');
 			if (skills.length > 0) {
 				skills.forEach(function(skill) {

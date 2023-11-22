@@ -302,7 +302,6 @@ include 'layout/header.php';
 					document.getElementById('employer').disabled = true;
 				} else {
 					$('#employer').prop('checked', true);
-					document.getElementById('freelancer').disabled = true;
 				}
 				if (window.location.hash === "#add-skill") {
       $('html, body').animate({

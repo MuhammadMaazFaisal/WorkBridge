@@ -57,6 +57,15 @@ if ($_POST['function'] == 'add-task') {
 
 function SendCode(){
     include 'connection.php';
+    $sql03 = "SELECT * FROM users WHERE email=:email";
+    $stmt03 = $conn->prepare($sql03);
+    $stmt03->bindParam(':email', $_POST['email']);
+    $stmt03->execute();
+    $result03 = $stmt03->fetchAll(PDO::FETCH_ASSOC);
+    if (count($result03) == 0) {
+        $array['status'] = 'error';
+        $array['message'] = "There is no account associated with this email.";
+    }else{
     $verificationCode = mt_rand(100000, 999999);
     $sql3 = "SELECT * FROM users WHERE type='admin'";
     $stmt3 = $conn->prepare($sql3);
@@ -79,6 +88,7 @@ function SendCode(){
     } else {
         $array['status'] = 'error';
         $array['message'] = "Email sending failed, Please try again.";
+    }
     }
     echo json_encode($array);
     
@@ -849,6 +859,7 @@ function UpdateUserProfile()
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
+    $mphone = $_POST['mphone'];
     $description = $_POST['description'];
     $skills = $_POST['skills'];
     $password = $_POST['old-password'];
@@ -862,7 +873,6 @@ function UpdateUserProfile()
     if (count($result) > 0 && $cpassword != "") {
         if (password_verify($password, $result['password'])) {
             if ($newpassword == $cpassword) {
-                $password = password_hash($newpassword, PASSWORD_DEFAULT);
             } else {
                 $array['status'] = 'error';
                 $array['message'] = "Password does not match";
@@ -877,10 +887,11 @@ function UpdateUserProfile()
         }
     }
 
-    $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, description=:description";
-    if ($password != "") {
+    $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, mobile=:mphone, description=:description";
+    if ($password != "" && $newpassword!="" && $cpassword!="") {
         $sql1 .= ", password=:password WHERE id=:id";
         $stmt = $conn->prepare($sql1);
+        $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
         $stmt->bindParam(':password', $password);
     } else {
         $sql1 .= " WHERE id=:id";
@@ -890,6 +901,7 @@ function UpdateUserProfile()
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':phone', $phone);
+    $stmt->bindParam(':mphone', $mphone);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
@@ -970,7 +982,6 @@ function UpdateProfile()
     if (count($result) > 0 && $cpassword != "") {
         if (password_verify($password, $result['password'])) {
             if ($newpassword == $cpassword) {
-                $password = password_hash($newpassword, PASSWORD_DEFAULT);
             } else {
                 $array['status'] = 'error';
                 $array['message'] = "Password does not match";
@@ -986,9 +997,10 @@ function UpdateProfile()
     }
 
     $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, description=:description";
-    if ($password != "") {
+    if ($password != "" && $newpassword!="" && $cpassword!="") {
         $sql1 .= ", password=:password WHERE id=:id";
         $stmt = $conn->prepare($sql1);
+         $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
         $stmt->bindParam(':password', $password);
     } else {
         $sql1 .= " WHERE id=:id";
