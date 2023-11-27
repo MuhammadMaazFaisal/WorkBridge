@@ -38,6 +38,7 @@
 							<li><a href="#"><i class="icon-material-outline-assessment"></i>Skills</a>
 							<ul>
 								<li><a href="/admin/dashboard-add-skills.php">Add Skills</a></li>
+								<li><a href="/admin/dashboard-add-category.php">Add Category</a></li>
 							</ul>
 						</li>
 						

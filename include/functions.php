@@ -53,9 +53,187 @@ if ($_POST['function'] == 'add-task') {
     GetFreelancers();
 } elseif ($_POST['function'] == 'GetBidderTasks') {
     GetBidderTasks();
+} elseif ($_POST['function'] == 'DeleteSkill') {
+    DeleteSkill();
+} elseif ($_POST['function'] == 'AddSkill') {
+    AddSkill();
+} elseif ($_POST['function'] == 'GetAllCategories') {
+    GetAllCategories();
+} elseif ($_POST['function'] == 'DeleteCategory') {
+    DeleteCategory();
+} elseif ($_POST['function'] == 'AddCategory') {
+    AddCategory();
+} elseif ($_POST['function'] == 'GetAllUserSkills') {
+    GetAllUserSkills();
+}elseif ($_POST['function'] == 'AddUserSkill') {
+    AddUserSkill();
+}elseif ($_POST['function'] == 'DeleteUserSkill') {
+    DeleteUserSkill();
 }
 
-function SendCode(){
+function DeleteUserSkill(){
+    include 'connection.php';
+    $array = array();
+    $sql = "DELETE FROM user_skills WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $_POST['id']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'User Skill Deleted Successfully';
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'User Skill could not be Deleted';
+    }
+    echo json_encode($array);
+}
+
+function AddUserSkill(){
+    include 'connection.php';
+    $array = array();
+    $check_existing = "SELECT * FROM user_skills WHERE u_id=:u_id AND s_id=:s_id";
+    $stmt_check_existing = $conn->prepare($check_existing);
+    $stmt_check_existing->bindParam(':u_id', $_POST['u_id']);
+    $stmt_check_existing->bindParam(':s_id', $_POST['s_id']);
+    $stmt_check_existing->execute();
+    $result_check_existing = $stmt_check_existing->fetch(PDO::FETCH_ASSOC);
+    if ($result_check_existing) {
+        $array['status'] = 'error';
+        $array['message'] = 'Skill already exists';
+        echo json_encode($array);
+        die();
+    }
+    $sql = "INSERT INTO user_skills (u_id,s_id) VALUES (:u_id,:s_id)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':u_id', $_POST['u_id']);
+    $stmt->bindParam(':s_id', $_POST['s_id']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'User Skill Added Successfully1';
+        session_start();
+        $_SESSION['user_skill'] = "User has skills";
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'User Skill could not be Added';
+    }
+    echo json_encode($array);
+}
+
+function GetAllUserSkills(){
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT user_skills.*,skills.name as name, skills.id as skill_id FROM user_skills join skills on user_skills.s_id=skills.id WHERE u_id=:u_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':u_id', $_POST['u_id']);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Get User Skills Success';
+        $array['data'] = $result;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Get User Skills Failed';
+        $array['data'] = [];
+    }
+    echo json_encode($array);
+}
+
+function AddCategory()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "INSERT INTO categories (name,status) VALUES (:name,'active')";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':name', $_POST['name']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Category Added Successfully';
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Category could not be Added';
+    }
+    echo json_encode($array);
+}
+
+function DeleteCategory()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "UPDATE categories SET status='inactive' WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $_POST['id']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Category Deleted Successfully';
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Category could not be Deleted';
+    }
+    echo json_encode($array);
+}
+
+function GetAllCategories()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "SELECT * FROM categories WHERE status='active'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Get Categories Success';
+        $array['data'] = $result;
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Get Categories Failed';
+    }
+    echo json_encode($array);
+}
+
+function AddSkill()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "INSERT INTO skills (name,category_id,status) VALUES (:name,:category_id,'active')";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':name', $_POST['name']);
+    $stmt->bindParam(':category_id', $_POST['category_id']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Skill Added Successfully';
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Skill could not be Added';
+    }
+    echo json_encode($array);
+}
+
+function DeleteSkill()
+{
+    include 'connection.php';
+    $array = array();
+    $sql = "UPDATE skills SET status='inactive' WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $_POST['id']);
+    $result = $stmt->execute();
+    if ($result) {
+        $array['status'] = 'success';
+        $array['message'] = 'Skill Deleted Successfully';
+    } else {
+        $array['status'] = 'error';
+        $array['message'] = 'Skill could not be Deleted';
+    }
+    echo json_encode($array);
+}
+
+function SendCode()
+{
     include 'connection.php';
     $sql03 = "SELECT * FROM users WHERE email=:email";
     $stmt03 = $conn->prepare($sql03);
@@ -65,36 +243,36 @@ function SendCode(){
     if (count($result03) == 0) {
         $array['status'] = 'error';
         $array['message'] = "There is no account associated with this email.";
-    }else{
-    $verificationCode = mt_rand(100000, 999999);
-    $sql3 = "SELECT * FROM users WHERE type='admin'";
-    $stmt3 = $conn->prepare($sql3);
-    $stmt3->execute();
-    $result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-    $from = $result3['email'];
-    $to = $_POST['email'];
-    $link = "https://example.com/task.php?id=" . $p_id;
-    $subject = "Extra Hour Verification Code";
-    $message = "Dear User,\n\nYour verification code is ".$verificationCode;
-    $headers = "From:" . $from;
-    if (mail($to, $subject, $message, $headers)) {
-        $array['status'] = 'success';
-        $array['message'] = "Email sent successfully.";
-        $sql1 = "UPDATE `users` SET `v_code`=:code WHERE email=:email";
-        $stmt1 = $conn->prepare($sql1);
-        $stmt1->bindParam(':code', $verificationCode);
-        $stmt1->bindParam(':email', $to);
-        $result1 = $stmt1->execute();
     } else {
-        $array['status'] = 'error';
-        $array['message'] = "Email sending failed, Please try again.";
-    }
+        $verificationCode = mt_rand(100000, 999999);
+        $sql3 = "SELECT * FROM users WHERE type='admin'";
+        $stmt3 = $conn->prepare($sql3);
+        $stmt3->execute();
+        $result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
+        $from = $result3['email'];
+        $to = $_POST['email'];
+        $link = "https://example.com/task.php?id=" . $p_id;
+        $subject = "Extra Hour Verification Code";
+        $message = "Dear User,\n\nYour verification code is " . $verificationCode;
+        $headers = "From:" . $from;
+        if (mail($to, $subject, $message, $headers)) {
+            $array['status'] = 'success';
+            $array['message'] = "Email sent successfully.";
+            $sql1 = "UPDATE `users` SET `v_code`=:code WHERE email=:email";
+            $stmt1 = $conn->prepare($sql1);
+            $stmt1->bindParam(':code', $verificationCode);
+            $stmt1->bindParam(':email', $to);
+            $result1 = $stmt1->execute();
+        } else {
+            $array['status'] = 'error';
+            $array['message'] = "Email sending failed, Please try again.";
+        }
     }
     echo json_encode($array);
-    
 }
 
-function CheckCode(){
+function CheckCode()
+{
     include 'connection.php';
     $sql1 = "SELECT * FROM users WHERE email=:email";
     $stmt1 = $conn->prepare($sql1);
@@ -102,26 +280,27 @@ function CheckCode(){
     $stmt1->execute();
     $result3 = $stmt1->fetch(PDO::FETCH_ASSOC);
     $v_code = $result3['v_code'];
-    if ($v_code==$_POST['verification_code']){
-         $array['status'] = 'success';
-    }else{
+    if ($v_code == $_POST['verification_code']) {
+        $array['status'] = 'success';
+    } else {
         $array['status'] = 'Verification Code Invalid';
         $array['message'] = "Please try again.";
     }
     echo json_encode($array);
 }
 
-function ResetPassword(){
+function ResetPassword()
+{
     include 'connection.php';
     $email = $_POST['email'];
-    
+
     // Check if the email exists in the database
     $sql_check_email = "SELECT * FROM users WHERE email=:email";
     $stmt_check_email = $conn->prepare($sql_check_email);
     $stmt_check_email->bindParam(':email', $email);
     $stmt_check_email->execute();
     $result_check_email = $stmt_check_email->fetch(PDO::FETCH_ASSOC);
-    
+
     if ($result_check_email) {
         $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT); // Rehash the password
         $sql1 = "UPDATE `users` SET `password`=:password WHERE email=:email";
@@ -129,13 +308,12 @@ function ResetPassword(){
         $stmt1->bindParam(':password', $password);
         $stmt1->bindParam(':email', $email);
         $result1 = $stmt1->execute();
-        if ($result1){
-         $array['status'] = 'success';
-        }else{
+        if ($result1) {
+            $array['status'] = 'success';
+        } else {
             $array['status'] = 'Error';
             $array['message'] = "Please try again.";
         }
-        
     } else {
         // Email does not exist, handle accordingly
         $array['status'] = 'Error';
@@ -145,7 +323,8 @@ function ResetPassword(){
 }
 
 
-function GetTotal(){
+function GetTotal()
+{
     include 'connection.php';
     $array = array();
     $sql = "SELECT COUNT(*) FROM projects";
@@ -296,7 +475,7 @@ function SendEmail()
     $url = "https://graph.facebook.com/v17.0/106033692541042/messages";
 
     $templateName = "gig_availability_notification";
-    $linkParameter = "https://example.com/task.php?id=". $p_id; // Replace with the actual link
+    $linkParameter = "https://example.com/task.php?id=" . $p_id; // Replace with the actual link
 
     // Loop through each WhatsApp number and send the message
     foreach ($whatsappNumbers as $whatsappNumber) {
@@ -359,11 +538,11 @@ function Login()
     $stmt->bindParam(':email', $_POST['email']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if ($result['status']=='inactive'){
+
+    if ($result['status'] == 'inactive') {
         $array['status'] = 'error';
         $array['message'] = 'Your Account has been blocked!';
-    }else{
+    } else {
         if ($result) {
             // If the user is found, check the password
             if (password_verify($_POST['password'], $result['password'])) {
@@ -417,8 +596,8 @@ function Register()
         $array['status'] = 'error';
         $array['message'] = 'Email already exists';
     } else {
-        $phone=$_POST['phone'] ? $_POST['phone'] : '';
-        $wphone=$_POST['w_phone'] ? $_POST['w_phone'] : $_POST['phone'];
+        $phone = $_POST['phone'] ? $_POST['phone'] : '';
+        $wphone = $_POST['w_phone'] ? $_POST['w_phone'] : $_POST['phone'];
         $sql = "INSERT INTO users (name, email, phone, mobile, description, password, type, status) VALUES (:name, :email, :phone, :mobile,'', :password, 'user', 'active')";
         $stmt = $conn->prepare($sql);
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -431,7 +610,7 @@ function Register()
         if ($result) {
             $array['status'] = 'success';
             $array['message'] = 'Registration Success';
-            
+
             $sql3 = "SELECT * FROM users WHERE type='admin'";
             $stmt3 = $conn->prepare($sql3);
             $stmt3->execute();
@@ -742,14 +921,14 @@ function UpdateTask()
         }
     }
 
-   if (isset($upload_path)) {
+    if (isset($upload_path)) {
         $stmt = $conn->prepare("UPDATE projects SET name=:name, category=:category, budget=:budget, description=:description, deadline=:date, upload=:upload, status='Open' WHERE id=:id");
         $stmt->bindParam(':upload', $upload_path);
     } else {
         // File not uploaded, so don't update the "upload" column
         $stmt = $conn->prepare("UPDATE projects SET name=:name, category=:category, budget=:budget, description=:description, deadline=:date, status='Open' WHERE id=:id");
     }
-    
+
     $stmt->bindParam(':name', $p_name);
     $stmt->bindParam(':category', $category);
     $stmt->bindParam(':budget', $budget);
@@ -776,7 +955,9 @@ function UpdateTask()
             if ($stmt1->execute()) {
                 $array['status'] = 'success';
                 $array['message'] = "Task Updated successfully.";
-                $array['upload'] =$upload_path;
+                if (isset($upload_path)) {
+                    $array['upload'] = $upload_path;
+                }
             } else {
                 $array['status'] = 'error';
                 $array['message'] = "Task submission failed, please try again.";
@@ -861,7 +1042,6 @@ function UpdateUserProfile()
     $phone = $_POST['phone'];
     $mphone = $_POST['mphone'];
     $description = $_POST['description'];
-    $skills = $_POST['skills'];
     $password = $_POST['old-password'];
     $newpassword = $_POST['new-password'];
     $cpassword = $_POST['r-new-password'];
@@ -888,7 +1068,7 @@ function UpdateUserProfile()
     }
 
     $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, mobile=:mphone, description=:description";
-    if ($password != "" && $newpassword!="" && $cpassword!="") {
+    if ($password != "" && $newpassword != "" && $cpassword != "") {
         $sql1 .= ", password=:password WHERE id=:id";
         $stmt = $conn->prepare($sql1);
         $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
@@ -905,53 +1085,6 @@ function UpdateUserProfile()
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
-        #get all s_id which have name in skills
-        $sql2 = "SELECT id FROM skills WHERE name IN (" . implode(",", array_map(function ($value) {
-            return "'" . $value . "'";
-        }, $skills)) . ")";
-        $stmt2 = $conn->prepare($sql2);
-        $stmt2->execute();
-        $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-        $s_ids = array();
-        foreach ($result2 as $row) {
-            array_push($s_ids, $row['id']);
-        }
-        #delete all user_skills with u_id
-        $sql3 = "DELETE FROM user_skills WHERE u_id=:u_id";
-        $stmt3 = $conn->prepare($sql3);
-        $stmt3->bindParam(':u_id', $id);
-        $stmt3->execute();
-        #insert all user_skills with u_id and s_id
-        $sql4 = "INSERT INTO user_skills (u_id, s_id) VALUES ";
-        $sql4 .= implode(",", array_map(function ($value) use ($id) {
-            return "('" . $id . "','" . $value . "')";
-        }, $s_ids));
-        $stmt4 = $conn->prepare($sql4);
-        $stmt4->execute();
-        
-        $sql01 = "SELECT * FROM users WHERE email=:email";
-        $stmt01 = $conn->prepare($sql01);
-        $stmt01->bindParam(':email', $email);
-        $stmt01->execute();
-        $result01 = $stmt01->fetch(PDO::FETCH_ASSOC);
-        $sql012 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
-        $stmt012 = $conn->prepare($sql012);
-        $stmt012->bindParam(':u_id', $result01['id']);
-        $stmt012->execute();
-        $skill = "User has no skills";
-        if ($stmt012->rowCount() > 0) {
-            $skill = "User has skills";
-        }
-        $array['user_type'] = $result01['type'];
-        session_start();
-        $_SESSION['user_id'] = $result01['id'];
-        $_SESSION['user_name'] = $result01['name'];
-        $_SESSION['user_email'] = $result01['email'];
-        $_SESSION['user_type'] = $result01['type'];
-        $_SESSION['user_phone'] = $result01['phone'];
-        $_SESSION['user_skill'] = $skill;
-        $_SESSION['status'] = 'logged_in';
-        $array['Session']= $_SESSION;
         $array['status'] = 'success';
         $array['message'] = "Profile Updated Successfully";
     } else {
@@ -970,7 +1103,6 @@ function UpdateProfile()
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $description = $_POST['description'];
-    $skills = $_POST['skills'];
     $password = $_POST['old-password'];
     $newpassword = $_POST['new-password'];
     $cpassword = $_POST['r-new-password'];
@@ -997,10 +1129,10 @@ function UpdateProfile()
     }
 
     $sql1 = "UPDATE users SET name=:name, email=:email, phone=:phone, description=:description";
-    if ($password != "" && $newpassword!="" && $cpassword!="") {
+    if ($password != "" && $newpassword != "" && $cpassword != "") {
         $sql1 .= ", password=:password WHERE id=:id";
         $stmt = $conn->prepare($sql1);
-         $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+        $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
         $stmt->bindParam(':password', $password);
     } else {
         $sql1 .= " WHERE id=:id";
@@ -1026,70 +1158,6 @@ function UpdateProfile()
             die();
         }
 
-        // Convert all skill names to lowercase for case-insensitive comparison
-        $skills = array_map('strtolower', $skills);
-
-        // Create an associative array to store the existing skills for quick lookup
-        $existingSkillNames = array_column($existingSkills, 'id', 'name');
-
-        // Prepare statements for adding and updating skills
-        $stmtAdd = $conn->prepare("INSERT INTO skills (name, status) VALUES (:name, 'active')");
-        $stmtUpdateStatus = $conn->prepare("UPDATE skills SET status = 'active' WHERE id = :id");
-
-        // Iterate through the skills and update the database accordingly
-        foreach ($skills as $skill) {
-            $skillExists = array_key_exists($skill, $existingSkillNames);
-            if (!$skillExists) {
-                // If the skill doesn't exist, add it to the database
-                $stmtAdd->bindParam(':name', $skill);
-                if ($stmtAdd->execute()) {
-                    $array['status'] = 'success';
-                    $array['message'] = "Profile Updated Successfully";
-                } else {
-                    $array['status'] = 'error';
-                    $array['message'] = "Profile could not be updated, please try again.";
-                    echo json_encode($array);
-                    die();
-                }
-            } else {
-                // If the skill exists, update its status to 'active'
-                $skillId = $existingSkillNames[$skill];
-                $stmtUpdateStatus->bindParam(':id', $skillId);
-                if (!$stmtUpdateStatus->execute()) {
-                    $array['status'] = 'error';
-                    $array['message'] = "Profile could not be updated, please try again.";
-                    echo json_encode($array);
-                    die();
-                }
-            }
-        }
-
-        // Update status to 'inactive' for skills that were not provided in the $skills array
-        $inactiveSkills = array_diff(array_map('strtolower', array_column($existingSkills, 'name')), $skills);
-        if (!empty($inactiveSkills)) {
-            // Prepare the SQL statement with separate named placeholders for each skill
-            $placeholders = implode(', ', array_map(function ($skill) {
-                return ':name_' . $skill;
-            }, $inactiveSkills));
-            $sql = "UPDATE skills SET status = 'inactive' WHERE name IN ($placeholders)";
-
-            // Prepare the statement
-            $stmtUpdateStatus = $conn->prepare($sql);
-
-            // Bind parameters using separate named placeholders for each skill
-            foreach ($inactiveSkills as $skill) {
-                $paramName = ':name_' . $skill;
-                $stmtUpdateStatus->bindValue($paramName, $skill);
-            }
-
-            if (!$stmtUpdateStatus->execute()) {
-                $array['status'] = 'error';
-                $array['message'] = "Profile could not be updated, please try again.";
-                echo json_encode($array);
-                die();
-            }
-        }
-
         // All operations were successful
         $array['status'] = 'success';
         $array['message'] = "Profile Updated Successfully";
@@ -1113,7 +1181,7 @@ function GetAllSkills()
 {
     include 'connection.php';
     $array = array();
-    $sql = "SELECT * FROM skills WHERE status='active'";
+    $sql = "SELECT skills.id as skill_id, skills.name as skill_name, categories.name as category_name, skills.status FROM skills JOIN categories ON skills.category_id = categories.id WHERE skills.status = 'active'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1124,6 +1192,7 @@ function GetAllSkills()
     } else {
         $array['status'] = 'error';
         $array['message'] = 'Skills could not be Fetched';
+        $array['data'] = [];
     }
     echo json_encode($array);
 }
@@ -1246,9 +1315,9 @@ function FilterTasks()
     if (!empty($categories) && !in_array('All Categories', $categories)) {
         $sql .= ' AND category IN ("' . implode('","', $categories) . '")';
     }
-    
+
     $sql .= ' ORDER BY date DESC';
-    
+
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();

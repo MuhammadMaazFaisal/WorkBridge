@@ -77,7 +77,6 @@ include 'layout/header.php';
 
 							<ul class="user-menu-small-nav">
 								<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
-								<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
 								<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
 							</ul>
 
@@ -156,17 +155,7 @@ include 'layout/header.php';
 					<div class="sidebar-widget">
 						<h3>Category</h3>
 						<select id="category" class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="All Categories">
-						    <option>All Categories</option>
-							<option>Admin Support</option>
-							<option>Customer Service</option>
-							<option>Data Analytics</option>
-							<option>Design & Creative</option>
-							<option>Legal</option>
-							<option>Software Developing</option>
-							<option>IT & Networking</option>
-							<option>Writing</option>
-							<option>Translation</option>
-							<option>Sales & Marketing</option>
+						 
 						</select>
 					</div>
 				</div>
@@ -267,7 +256,8 @@ include 'layout/header.php';
         Please Update your Skills and WhatsApp number so that you can receive WhatsApp notification whenever there is a new task posted related to your skills.
       </div>
       <div class="modal-footer">
-        <a href="/settings.php#add-skill"><button type="button" class="btn btn-primary">Add Details</button></a>
+	  <a style="margin: 0px 10px 0px 10px;" href="/add-skill.php"><button type="button" class="btn btn-primary">Add Skills</button></a>
+        <a  style="margin: 0px 10px 0px 10px;" href="/settings.php"><button type="button" class="btn btn-primary">Add Whatsapp</button></a>
       </div>
     </div>
   </div>
@@ -364,6 +354,8 @@ include 'layout/footer.php';
         
 <?php if($_SESSION['user_phone']=='' || $_SESSION['user_skill']=='User has no skills'){ ?>
  $('#customModal').css('display', 'block');
+ console.log('user_phone',<?php echo $_SESSION['user_phone']; ?>);
+ console.log('user_skill','<?php echo $_SESSION['user_skill']; ?>');
 <?php } ?>
 
  
@@ -419,6 +411,27 @@ include 'layout/footer.php';
 			sortField: 'text'
 		});
 
+		var categories = document.getElementById('category');
+			$.ajax({
+				url: '../include/functions.php',
+				type: 'POST',
+				data: {
+					function: 'GetAllCategories'
+				},
+				success: function(data) {
+					console.log(data);
+					data = JSON.parse(data);
+					if (data.status == 'success') {
+						data.data.forEach(function(category) {
+							var option = document.createElement('option');
+							option.value = category.name;
+							option.text = category.name;
+							categories.appendChild(option);
+						});
+					}
+				}
+			});
+
 		$.ajax({
 			url: 'include/functions.php',
 			type: 'POST',
@@ -432,8 +445,8 @@ include 'layout/footer.php';
 					var add_skill = $('#add-skills')[0].selectize;
 					for (let i = 0; i < data.data.length; i++) {
 						var newOption = {
-							value: data.data[i]['name'],
-							text: data.data[i]['name']
+							value: data.data[i]['skill_name'],
+							text: data.data[i]['skill_name']
 						};
 						add_skill.addOption(newOption);
 					}

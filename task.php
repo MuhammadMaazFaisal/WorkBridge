@@ -77,7 +77,6 @@ include 'layout/header.php';
 
                             <ul class="user-menu-small-nav">
                                 <li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
-								<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
                                 <li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
                             </ul>
 

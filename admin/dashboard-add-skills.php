@@ -58,8 +58,14 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 						<div class="dashboard-box margin-top-0">
 
 							<!-- Headline -->
-							<div class="headline">
-								<h3><i class="icon-feather-folder-plus"></i> All Skills</h3>
+							<div class="headline row" style="display: flex !important;">
+
+								<div class="col-6">
+									<h3><i class="icon-feather-folder-plus"></i> All Skills</h3>
+								</div>
+								<div class="col-6 d-flex justify-content-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSkillModal">
+										Add Skill
+									</button></div>
 							</div>
 
 							<div class="content with-padding padding-bottom-10">
@@ -67,11 +73,12 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 								<div class="row">
 
 									<div class="col-xl-12">
-										<table id="skillsTable" class="table table-striped">
+										<table id="skillsTable" class="table responsive table table-striped">
 											<thead>
 												<tr>
 													<th scope="col">#</th>
-													<th scope="col">Skill Name</th>
+													<th scope="col">Name</th>
+													<th scope="col">Category</th>
 													<th scope="col">Action</th>
 												</tr>
 											</thead>
@@ -99,6 +106,33 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 	</div>
 	<!-- Wrapper / End -->
 
+	<div class="modal fade" id="addSkillModal" tabindex="-1" aria-labelledby="addSkillModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addSkillModalLabel">Add New Skill</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="addSkillForm">
+						<div class="mb-3">
+							<label for="skillName" class="form-label">Skill Name</label>
+							<input type="text" class="form-control" id="skillName" name="skillName" required>
+						</div>
+						<div class="mb-3">
+							<label for="skillCategory" class="form-label">Category</label>
+							<select class="form-select" id="skillCategory" name="skillCategory" required>
+								
+							</select>
+						</div>
+						<div class="d-flex justify-content-end">
+							<button type="submit" class="btn btn-primary">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Scripts
 ================================================== -->
@@ -112,10 +146,72 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 	<!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
 	<script src="../js/chart.min.js"></script>
 	<script>
+		function DeleteSkill(id) {
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You want to delete this skill?",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Yes, delete it!',
+				cancelButtonText: 'No, keep it'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: '../include/functions.php',
+						type: 'POST',
+						data: {
+							function: 'DeleteSkill',
+							id: id
+						},
+						success: function(data) {
+							console.log(data);
+							data = JSON.parse(data);
+							if (data.status == 'success') {
+								Swal.fire(
+									'Deleted!',
+									data.message,
+									'success'
+								).then((result) => {
+									if (result.isConfirmed) {
+										location.reload();
+									}
+								})
+							} else {
+								Swal.fire(
+									'Error!',
+									data.message,
+									'error'
+								)
+							}
+						}
+					});
+				}
+			})
+		}
 		$(document).ready(function() {
+
+			var categories = document.getElementById('skillCategory');
+			$.ajax({
+				url: '../include/functions.php',
+				type: 'POST',
+				data: {
+					function: 'GetAllCategories'
+				},
+				success: function(data) {
+					console.log(data);
+					data = JSON.parse(data);
+					if (data.status == 'success') {
+						data.data.forEach(function(category) {
+							var option = document.createElement('option');
+							option.value = category.id;
+							option.text = category.name;
+							categories.appendChild(option);
+						});
+					}
+				}
+			});
+
 			$('#skillsTable').DataTable({
-				"processing": true,
-				"serverSide": true,
 				"ajax": {
 					url: "../include/functions.php",
 					type: "POST",
@@ -130,38 +226,57 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 						}
 					},
 					{
-						"data": "name"
+						"data": "skill_name"
 					},
 					{
-						"data": "id",
+						"data": "category_name"
+					},
+					{
+						"data": "skill_id",
 						"render": function(data, type, row, meta) {
 							return `<a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="DeleteSkill(${data})"><i class="fa fa-trash"></i></a>`;
 						}
 					}
 				]
 			});
+		});
+
+
+		$('#addSkillForm').on('submit', function(e) {
+			e.preventDefault();
+			var skillName = $('#skillName').val();
+			var skillCategory = $('#skillCategory').val();
+
 			$.ajax({
 				url: '../include/functions.php',
 				type: 'POST',
 				data: {
-					function: 'GetAllSkills'
+					function: 'AddSkill',
+					name: skillName,
+					category_id: skillCategory
 				},
 				success: function(data) {
-					data = JSON.parse(data);
 					console.log(data);
-					if (data.status == 'success') {
-						// var add_skill = $('#add-skills')[0].selectize;
-						// for (let i = 0; i < data.data.length; i++) {
-						// 	var newOption = {
-						// 		value: data.data[i]['name'],
-						// 		text: data.data[i]['name']
-						// 	};
-						// 	add_skill.addOption(newOption);
-						// }
+					data = JSON.parse(data);
+					if (data.status === 'success') {
+						$('#addSkillModal').modal('hide');
+						Swal.fire('Success', data.message, 'success').then((result) => {
+							if (result.isConfirmed) {
+								location.reload();
+							}
+						})
+					} else {
+						Swal.fire('Error', data.message, 'error').then((result) => {
+							if (result.isConfirmed) {
+								location.reload();
+							}
+						})
 					}
 				}
 			});
 		});
+
+
 		$(document).on('submit', '#add-task', function(e) {
 			e.preventDefault();
 			var form = new FormData(this);

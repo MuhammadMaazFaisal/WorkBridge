@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 28, 2023 at 04:01 AM
+-- Generation Time: Nov 27, 2023 at 01:23 AM
 -- Server version: 8.0.30
--- PHP Version: 7.4.33
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,9 +31,21 @@ CREATE TABLE `bids` (
   `id` int NOT NULL,
   `u_id` int NOT NULL,
   `p_id` int NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `date` timestamp NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -43,35 +55,15 @@ CREATE TABLE `bids` (
 
 CREATE TABLE `projects` (
   `id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `category` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `budget` int NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `upload` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `deadline` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `upload` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deadline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `projects`
---
-
-INSERT INTO `projects` (`id`, `name`, `category`, `budget`, `description`, `upload`, `deadline`, `status`, `date`) VALUES
-(1, 'Web Development', 'Data Analytics', 100, 'nm', NULL, '2023-07-29', 'Open', '2023-07-28 03:04:58'),
-(2, 'First Project', 'Data Analytics', 50, 'dad', NULL, '2023-07-28', 'Open', '2023-07-28 03:13:13'),
-(3, 'First Project 2', 'Data Analytics', 50, 'dad', NULL, '2023-07-28', 'Open', '2023-07-28 03:14:14'),
-(4, 'Web Development', 'Customer Service', 50, 'sad', NULL, '2023-07-28', 'Open', '2023-07-28 03:17:05'),
-(5, 'New Project', 'Data Analytics', 21, 'asd', NULL, '2023-07-28', 'Open', '2023-07-28 03:17:47'),
-(6, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:18:37'),
-(7, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:20:43'),
-(8, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:30:37'),
-(9, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:30:55'),
-(10, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:36:50'),
-(11, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:37:04'),
-(12, 'New Project', 'Customer Service', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:37:24'),
-(13, 'New Project', 'Data Analytics', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:52:15'),
-(14, 'New Project', 'Data Analytics', 23, 'das', NULL, '2023-07-28', 'Open', '2023-07-28 03:53:56');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -83,27 +75,7 @@ CREATE TABLE `project_skills` (
   `id` int NOT NULL,
   `p_id` int NOT NULL,
   `s_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `project_skills`
---
-
-INSERT INTO `project_skills` (`id`, `p_id`, `s_id`) VALUES
-(1, 1, 46),
-(2, 2, 46),
-(3, 3, 46),
-(4, 4, 46),
-(5, 5, 46),
-(6, 6, 46),
-(7, 7, 46),
-(8, 8, 46),
-(9, 9, 46),
-(10, 10, 46),
-(11, 11, 46),
-(12, 12, 46),
-(13, 13, 46),
-(14, 14, 46);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -113,18 +85,10 @@ INSERT INTO `project_skills` (`id`, `p_id`, `s_id`) VALUES
 
 CREATE TABLE `skills` (
   `id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `skills`
---
-
-INSERT INTO `skills` (`id`, `name`, `status`) VALUES
-(46, 'ui ux', 'active'),
-(47, 'angular', 'active'),
-(48, 'laravel', 'inactive');
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category_id` int NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -134,22 +98,24 @@ INSERT INTO `skills` (`id`, `name`, `status`) VALUES
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `v_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `description`, `type`, `password`, `status`) VALUES
-(1, 'Admin', 'm.maazfaisal0301@gmail.com', '923122345662', '', 'admin', '$2y$10$1d4RBOXS0pUrajg2xyloD.8zKibxQ5mO6PjU7vzixOCwWt1HGTr/W', 'active'),
-(2, 'Maaz', 'm.maazfaisal0302@gmail.com', '923122345662', '', 'user', '$2y$10$yCRtHQFAmJjvrVeGSYwD.utrEKolS8lSrY47ETcUd02ke1oV/.suK', 'active');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `mobile`, `description`, `type`, `password`, `v_code`, `status`, `date`) VALUES
+(1, 'Admin', 'admin@gmail.com', '6803122345662', '', '', 'admin', '$2y$10$o4EECh/lK5MaHU708.OMDO9.AwZ6fn6k44rJLgiTLpDx09.d7lZhW', '', 'active', '2023-09-16 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -161,14 +127,7 @@ CREATE TABLE `user_skills` (
   `id` int NOT NULL,
   `u_id` int NOT NULL,
   `s_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `user_skills`
---
-
-INSERT INTO `user_skills` (`id`, `u_id`, `s_id`) VALUES
-(4, 2, 46);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -181,6 +140,12 @@ ALTER TABLE `bids`
   ADD PRIMARY KEY (`id`),
   ADD KEY `u_id` (`u_id`),
   ADD KEY `p_id` (`p_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `projects`
@@ -200,7 +165,8 @@ ALTER TABLE `project_skills`
 -- Indexes for table `skills`
 --
 ALTER TABLE `skills`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `users`
@@ -224,37 +190,43 @@ ALTER TABLE `user_skills`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `project_skills`
 --
 ALTER TABLE `project_skills`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `user_skills`
 --
 ALTER TABLE `user_skills`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- Constraints for dumped tables
@@ -264,22 +236,28 @@ ALTER TABLE `user_skills`
 -- Constraints for table `bids`
 --
 ALTER TABLE `bids`
-  ADD CONSTRAINT `bids_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `bids_ibfk_2` FOREIGN KEY (`p_id`) REFERENCES `projects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `bids_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `bids_ibfk_2` FOREIGN KEY (`p_id`) REFERENCES `projects` (`id`);
 
 --
 -- Constraints for table `project_skills`
 --
 ALTER TABLE `project_skills`
-  ADD CONSTRAINT `project_skills_ibfk_1` FOREIGN KEY (`p_id`) REFERENCES `projects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `project_skills_ibfk_2` FOREIGN KEY (`s_id`) REFERENCES `skills` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `project_skills_ibfk_1` FOREIGN KEY (`p_id`) REFERENCES `projects` (`id`),
+  ADD CONSTRAINT `project_skills_ibfk_2` FOREIGN KEY (`s_id`) REFERENCES `skills` (`id`);
+
+--
+-- Constraints for table `skills`
+--
+ALTER TABLE `skills`
+  ADD CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_skills`
 --
 ALTER TABLE `user_skills`
-  ADD CONSTRAINT `user_skills_ibfk_1` FOREIGN KEY (`s_id`) REFERENCES `skills` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `user_skills_ibfk_2` FOREIGN KEY (`u_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `user_skills_ibfk_1` FOREIGN KEY (`s_id`) REFERENCES `skills` (`id`),
+  ADD CONSTRAINT `user_skills_ibfk_2` FOREIGN KEY (`u_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -2,9 +2,8 @@
 session_start();
 if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 	include 'layout/header.php';
- ?>
+?>
 	<style>
-		
 		.selectize-input {
 			padding: 13px 10px !important;
 			height: 45px !important;
@@ -13,27 +12,29 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 		input[type="select-one"] {
 			height: 24px !important;
 		}
-		.fields-ul > li{
+
+		.fields-ul>li {
 			border-bottom: none !important;
 		}
-		
-    .toggle-password {
-        position: absolute;
-        top: 45%;
-        right: 25px;
-        cursor: pointer;
-        color:#2a41e8;
-    }
-    
-    .toggle-password i {
-        font-size: 18px;
-        color: #888;
-        transition: color 0.3s;
-    }
-    
-    .toggle-password:hover i {
-        color: #333; /* Change color on hover for better visibility */
-    }
+
+		.toggle-password {
+			position: absolute;
+			top: 45%;
+			right: 25px;
+			cursor: pointer;
+			color: #2a41e8;
+		}
+
+		.toggle-password i {
+			font-size: 18px;
+			color: #888;
+			transition: color 0.3s;
+		}
+
+		.toggle-password:hover i {
+			color: #333;
+			/* Change color on hover for better visibility */
+		}
 	</style>
 
 	<!-- Header Container
@@ -108,7 +109,6 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 
 								<ul class="user-menu-small-nav">
 									<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
-									<li><a href="/settings.php#add-skill"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
 									<li><button onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</button></li>
 								</ul>
 
@@ -160,6 +160,7 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 					<div class="dashboard-nav">
 						<div class="dashboard-nav-inner">
 							<ul data-submenu-title="Account">
+								<li><a href="add-skill.php"><i class="icon-material-outline-assessment"></i>Add Skills</a></li>
 								<li><a href="settings.php"><i class="icon-material-outline-settings"></i> Settings</a></li>
 								<li><a onclick="Logout()"><i class="icon-material-outline-power-settings-new"></i> Logout</a></li>
 							</ul>
@@ -232,8 +233,8 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												<div class="col-xl-4">
 													<div class="submit-field">
 														<h5>Whatsapp Number</h5>
-														<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052"/>
-                                                        <input type="hidden" id="country-code" name="country_code" value="" /> 
+														<input type="tel" class="input-text with-border" id="phone" placeholder="e.g. 3152389052" />
+														<input type="hidden" id="country-code" name="country_code" value="" />
 													</div>
 												</div>
 
@@ -253,11 +254,11 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 													<div class="submit-field">
 														<h5>Phone Number</h5>
 														<input type="tel" class="input-text with-border" id="mphone" placeholder="e.g. 3152389052" required />
-                                                        <input type="hidden" id="mcountry-code" name="mcountry_code" value="" /> 
+														<input type="hidden" id="mcountry-code" name="mcountry_code" value="" />
 													</div>
 												</div>
 
-												
+
 
 											</div>
 										</div>
@@ -273,34 +274,11 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 
 								<!-- Headline -->
 								<div class="headline">
-									<h3><i class="icon-material-outline-face" ></i> My Profile</h3>
+									<h3><i class="icon-material-outline-face"></i> My Profile</h3>
 								</div>
 
 								<div class="content">
 									<ul class="fields-ul">
-										<li>
-											<div class="row">
-
-												<div class="col-xl-12">
-													<div class="submit-field">
-														<h5 >Add Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
-
-														<!-- Skills List -->
-														<div class="keywords-container">
-															<div class="col-6 keyword-input-container">
-																<select id="add-skills" class="keyword-input with-border custom-select">
-																	<!--<option value="">Select a skill...</option>-->
-																</select>
-																<button type="button" class="keyword-input-button ripple-effect" style="margin-right:25px"><i class="icon-material-outline-add"></i></button>
-															</div>
-															<div class="keywords-list" id="skills-container">
-															</div>
-															<div class="clearfix"></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</li>
 										<li>
 											<div class="row">
 												<div class="col-xl-12">
@@ -333,8 +311,8 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												<h5>Current Password</h5>
 												<input id="old-password" name="old-password" type="password" class="with-border">
 												<span class="toggle-password" id="show-password1">
-                                                    Show
-                                                </span>
+													Show
+												</span>
 											</div>
 										</div>
 
@@ -343,8 +321,8 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												<h5>New Password</h5>
 												<input id="new-password" name="new-password" type="password" class="with-border">
 												<span class="toggle-password" id="show-password2">
-                                                    Show
-                                                </span>
+													Show
+												</span>
 											</div>
 										</div>
 
@@ -353,8 +331,8 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 												<h5>Repeat New Password</h5>
 												<input id="r-new-password" name="r-new-password" type="password" class="with-border">
 												<span class="toggle-password" id="show-password3">
-                                                    Show
-                                                </span>
+													Show
+												</span>
 											</div>
 										</div>
 									</div>
@@ -370,15 +348,15 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 				</div>
 
 				<!-- Row / End -->
-				
+
 				<div class="dashboard-footer-spacer"></div>
-			<div class="small-footer margin-top-15">
-				<div class="small-footer-copyrights">
-					© 2023 <strong><a href="mailto:m.maazfaisal0301@gmail.com"> Developed by Muhammad Maaz Faisal</a></strong>. All Rights Reserved.
+				<div class="small-footer margin-top-15">
+					<div class="small-footer-copyrights">
+						© 2023 <strong><a href="mailto:m.maazfaisal0301@gmail.com"> Developed by Muhammad Maaz Faisal</a></strong>. All Rights Reserved.
+					</div>
+					<div class="clearfix"></div>
 				</div>
-				<div class="clearfix"></div>
-			</div>
-			<!-- Footer / End -->
+				<!-- Footer / End -->
 
 			</div>
 		</div>
@@ -412,7 +390,7 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 	<script src="js/sweetalert2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
 
 	<!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
 	<script src="js/chart.min.js"></script>
@@ -430,82 +408,50 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 				}
 			});
 		}
-		
-		$('#show-password1').on('click', function () {
-            var passwordField = $('#old-password');
-            var passwordFieldType = passwordField.attr('type');
-            
-            if (passwordFieldType === 'password') {
-                passwordField.attr('type', 'text');
-                $(this).text('Hide');
-            } else {
-                passwordField.attr('type', 'password');
-                $(this).text('Show');
-            }
-        });
-        
-         $('#show-password2').on('click', function () {
-            var passwordField = $('#new-password');
-            var passwordFieldType = passwordField.attr('type');
-            
-            if (passwordFieldType === 'password') {
-                passwordField.attr('type', 'text');
-                $(this).text('Hide');
-            } else {
-                passwordField.attr('type', 'password');
-                $(this).text('Show');
-            }
-        });
-        
-         $('#show-password3').on('click', function () {
-            var passwordField = $('#r-new-password');
-            var passwordFieldType = passwordField.attr('type');
-            
-            if (passwordFieldType === 'password') {
-                passwordField.attr('type', 'text');
-                $(this).text('Hide');
-            } else {
-                passwordField.attr('type', 'password');
-                $(this).text('Show');
-            }
-        });
-        
+
+		$('#show-password1').on('click', function() {
+			var passwordField = $('#old-password');
+			var passwordFieldType = passwordField.attr('type');
+
+			if (passwordFieldType === 'password') {
+				passwordField.attr('type', 'text');
+				$(this).text('Hide');
+			} else {
+				passwordField.attr('type', 'password');
+				$(this).text('Show');
+			}
+		});
+
+		$('#show-password2').on('click', function() {
+			var passwordField = $('#new-password');
+			var passwordFieldType = passwordField.attr('type');
+
+			if (passwordFieldType === 'password') {
+				passwordField.attr('type', 'text');
+				$(this).text('Hide');
+			} else {
+				passwordField.attr('type', 'password');
+				$(this).text('Show');
+			}
+		});
+
+		$('#show-password3').on('click', function() {
+			var passwordField = $('#r-new-password');
+			var passwordFieldType = passwordField.attr('type');
+
+			if (passwordFieldType === 'password') {
+				passwordField.attr('type', 'text');
+				$(this).text('Hide');
+			} else {
+				passwordField.attr('type', 'password');
+				$(this).text('Show');
+			}
+		});
+
 		$(document).ready(function() {
-		   
+
 			$('.custom-select').selectize({
 				sortField: 'text'
-			});
-			const myInput = document.getElementById("add-skills");
-			myInput.addEventListener("keydown", function(event) {
-				if (event.key === "Enter") {
-					event.preventDefault();
-				}
-			});
-
-			$.ajax({
-				url: '../include/functions.php',
-				type: 'POST',
-				data: {
-					function: 'GetAllSkills'
-				},
-				success: function(data) {
-					data = JSON.parse(data);
-					console.log(data);
-					if (data.status == 'success') {
-						var add_skill = $('#add-skills')[0].selectize;
-						for (let i = 0; i < data.data.length; i++) {
-							var newOption = {
-								value: data.data[i]['name'],
-								text: data.data[i]['name']
-							};
-							add_skill.addOption(newOption);
-						}
-					 if (window.location.hash === "#add-skill") {
-      $('html, body').animate({
-        scrollTop: $('#add-skill').offset().top}, 1000); 
-    }
-					}
-				}
 			});
 
 			$.ajax({
@@ -521,58 +467,58 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 					$('#name').val(data.data.name);
 					$('#email').val(data.data.email);
 					var phoneNumber = data.data.phone;
-					 var countryCodeInput = document.querySelector("#country-code");
+					var countryCodeInput = document.querySelector("#country-code");
 
-                    // Set the phone input field with the extracted phone number
-                    var phoneInput = document.querySelector("#phone");
-                    phoneInput.value = "+"+phoneNumber;
-            
-                    // Initialize intl-tel-input without specifying an initial country
-                    var iti = window.intlTelInput(phoneInput, {
-                        separateDialCode: true,
-                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
-                    });
-            
-                    // Listen for country change event and update the hidden input
-                    iti.promise.then(function () {
-                        phoneInput.addEventListener("countrychange", function (e) {
-                            var selectedCountry = iti.getSelectedCountryData();
-                            countryCodeInput.value = "+" + selectedCountry.dialCode;
-                        });
-                    });
-                    
-                    var selectedCountry = iti.getSelectedCountryData();
-                    countryCodeInput.value = "+" + selectedCountry.dialCode;
-                    phoneInput.value=phoneNumber.substring((selectedCountry.dialCode).length);
-                    
-                    
-                    var mphoneNumber = data.data.mobile;
-					 var mcountryCodeInput = document.querySelector("#mcountry-code");
+					// Set the phone input field with the extracted phone number
+					var phoneInput = document.querySelector("#phone");
+					phoneInput.value = "+" + phoneNumber;
 
-                    // Set the phone input field with the extracted phone number
-                    var mphoneInput = document.querySelector("#mphone");
-                    if (data.data.mobile !=''){
-                    mphoneInput.value = "+"+mphoneNumber;
-                    }
-            
-                    // Initialize intl-tel-input without specifying an initial country
-                    var miti = window.intlTelInput(mphoneInput, {
-                        separateDialCode: true,
-                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
-                    });
-            
-                    // Listen for country change event and update the hidden input
-                    miti.promise.then(function () {
-                        phoneInput.addEventListener("countrychange", function (e) {
-                            var mselectedCountry = miti.getSelectedCountryData();
-                            mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
-                        });
-                    });
-                    if (data.data.mobile !=''){
-                    var mselectedCountry = miti.getSelectedCountryData();
-                            mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
-                    mphoneInput.value=mphoneNumber.substring((mselectedCountry.dialCode).length);
-                    }
+					// Initialize intl-tel-input without specifying an initial country
+					var iti = window.intlTelInput(phoneInput, {
+						separateDialCode: true,
+						utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+					});
+
+					// Listen for country change event and update the hidden input
+					iti.promise.then(function() {
+						phoneInput.addEventListener("countrychange", function(e) {
+							var selectedCountry = iti.getSelectedCountryData();
+							countryCodeInput.value = "+" + selectedCountry.dialCode;
+						});
+					});
+
+					var selectedCountry = iti.getSelectedCountryData();
+					countryCodeInput.value = "+" + selectedCountry.dialCode;
+					phoneInput.value = phoneNumber.substring((selectedCountry.dialCode).length);
+
+
+					var mphoneNumber = data.data.mobile;
+					var mcountryCodeInput = document.querySelector("#mcountry-code");
+
+					// Set the phone input field with the extracted phone number
+					var mphoneInput = document.querySelector("#mphone");
+					if (data.data.mobile != '') {
+						mphoneInput.value = "+" + mphoneNumber;
+					}
+
+					// Initialize intl-tel-input without specifying an initial country
+					var miti = window.intlTelInput(mphoneInput, {
+						separateDialCode: true,
+						utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/utils.js", // Include the utils.js file
+					});
+
+					// Listen for country change event and update the hidden input
+					miti.promise.then(function() {
+						phoneInput.addEventListener("countrychange", function(e) {
+							var mselectedCountry = miti.getSelectedCountryData();
+							mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
+						});
+					});
+					if (data.data.mobile != '') {
+						var mselectedCountry = miti.getSelectedCountryData();
+						mcountryCodeInput.value = "+" + mselectedCountry.dialCode;
+						mphoneInput.value = mphoneNumber.substring((mselectedCountry.dialCode).length);
+					}
 					$('#description').val(data.data.description);
 					if (data.skills.length > 0) {
 						data.skills.forEach(function(skill) {
@@ -581,79 +527,65 @@ if ($_SESSION['user_type'] == 'user' && $_SESSION['status'] == 'logged_in') {
 					}
 					if (data.data.type == 'user') {
 						$('#freelancer').prop('checked', true);
-					} 
-				 if (window.location.hash === "#add-skill") {
-      $('html, body').animate({
-        scrollTop: $('#add-skill').offset().top}, 1000); 
-    }
-					
+					}
+					if (window.location.hash === "#add-skill") {
+						$('html, body').animate({
+							scrollTop: $('#add-skill').offset().top
+						}, 1000);
+					}
+
 
 				}
 			});
 		});
-		
+
 		$(document).on('submit', '#profile', function(e) {
 			e.preventDefault();
 			var form = new FormData(this);
 			phone = $('#phone').val();
-    		var countryCode = $('#country-code').val();
-    		var phoneNumber=countryCode+phone;
-    		var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
-    		form.set('phone', sanitizedPhoneNumber);
-    		mphone = $('#mphone').val();
-    		var mcountryCode = $('#mcountry-code').val();
-    		var mphoneNumber=mcountryCode+mphone;
-    		var msanitizedPhoneNumber = mphoneNumber.replace(/\+/g, '');
-    		form.set('mphone', msanitizedPhoneNumber);
-			var skills = document.querySelectorAll('#skills-container .keyword-text');
-			if (skills.length > 0) {
-				skills.forEach(function(skill) {
-					form.append('skills[]', skill.textContent.trim());
-					console.log(skill.textContent.trim());
-				});
-				form.append('function', 'UpdateUserProfile');
-				form.append('id', <?php echo $_SESSION['user_id']; ?>);
-				$.ajax({
-					url: 'include/functions.php',
-					type: 'POST',
-					data: form,
-					contentType: false,
-					cache: false,
-					processData: false,
-					success: function(data) {
-						console.log(data);
-						data = JSON.parse(data);
-						console.log(data);
-						if (data.status == 'success') {
-							Swal.fire({
-								title: 'Success!',
-								text: data.message,
-								icon: 'success',
-								confirmButtonText: 'Ok'
-							}).then((result) => {
-								if (result.isConfirmed) {
-									window.location.reload();
-								}
-							})
-						} else {
-							Swal.fire({
-								title: 'Error!',
-								text: data.message,
-								icon: 'error',
-								confirmButtonText: 'Ok'
-							})
-						}
+			var countryCode = $('#country-code').val();
+			var phoneNumber = countryCode + phone;
+			var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
+			form.set('phone', sanitizedPhoneNumber);
+			mphone = $('#mphone').val();
+			var mcountryCode = $('#mcountry-code').val();
+			var mphoneNumber = mcountryCode + mphone;
+			var msanitizedPhoneNumber = mphoneNumber.replace(/\+/g, '');
+			form.set('mphone', msanitizedPhoneNumber);
+			form.append('function', 'UpdateUserProfile');
+			form.append('id', <?php echo $_SESSION['user_id']; ?>);
+			$.ajax({
+				url: 'include/functions.php',
+				type: 'POST',
+				data: form,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function(data) {
+					console.log(data);
+					data = JSON.parse(data);
+					console.log(data);
+					if (data.status == 'success') {
+						Swal.fire({
+							title: 'Success!',
+							text: data.message,
+							icon: 'success',
+							confirmButtonText: 'Ok'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.reload();
+							}
+						})
+					} else {
+						Swal.fire({
+							title: 'Error!',
+							text: data.message,
+							icon: 'error',
+							confirmButtonText: 'Ok'
+						})
 					}
-				});
-			} else {
-				Swal.fire({
-					title: 'Error!',
-					text: 'Please add skills',
-					icon: 'error',
-					confirmButtonText: 'Ok'
-				})
-				return false;
-			}
+				}
+			});
 
 		});
 	</script>

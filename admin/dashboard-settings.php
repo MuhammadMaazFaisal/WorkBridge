@@ -135,27 +135,6 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 									<ul class="fields-ul">
 										<li>
 											<div class="row">
-
-												<div class="col-xl-12">
-													<div class="submit-field">
-														<h5>Add Skills <i class="help-icon" data-tippy-placement="right" title="Add up to 10 skills"></i></h5>
-
-														<!-- Skills List -->
-														<div class="keywords-container">
-															<div class="col-6 keyword-input-container">
-																<input id="add-skills" type="text" class="keyword-input with-border" placeholder="e.g. Angular, Laravel" />
-																<button type="button" class="keyword-input-button ripple-effect mr-5" style="margin-right:25px"><i class="icon-material-outline-add"></i></button>
-															</div>
-															<div class="keywords-list" id="skills-container">
-															</div>
-															<div class="clearfix"></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</li>
-										<li>
-											<div class="row">
 												<div class="col-xl-12">
 													<div class="submit-field">
 														<h5>Introduce Yourself</h5>
@@ -248,13 +227,6 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 	<?php include 'layout/footer.php'; ?>
 	<script>
 		$(document).ready(function() {
-			const myInput = document.getElementById("add-skills");
-			myInput.addEventListener("keydown", function(event) {
-				if (event.key === "Enter") {
-					event.preventDefault();
-				}
-			});
-
 			$.ajax({
 				url: '../include/functions.php',
 				type: 'POST',
@@ -292,11 +264,6 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 					phoneInput.value = phoneNumber.substring((selectedCountry.dialCode).length);
 
 					$('#description').val(data.data.description);
-					if (data.skills.length > 0) {
-						data.skills.forEach(function(skill) {
-							$('#skills-container').append('<div class="keyword"><span class="keyword-text">' + skill.name + '</span><span class="keyword-remove"></span></div>');
-						});
-					}
 					if (data.data.type == 'user') {
 						$('#freelancer').prop('checked', true);
 						document.getElementById('employer').disabled = true;
@@ -361,55 +328,40 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 			var phoneNumber = countryCode + phone;
 			var sanitizedPhoneNumber = phoneNumber.replace(/\+/g, '');
 			form.set('phone', sanitizedPhoneNumber);
-			var skills = document.querySelectorAll('#skills-container .keyword-text');
-			if (skills.length > 0) {
-				skills.forEach(function(skill) {
-					form.append('skills[]', skill.textContent.trim());
-					console.log(skill.textContent.trim());
-				});
-				form.append('function', 'UpdateProfile');
-				form.append('id', <?php echo $_SESSION['user_id']; ?>);
-				$.ajax({
-					url: '../include/functions.php',
-					type: 'POST',
-					data: form,
-					contentType: false,
-					cache: false,
-					processData: false,
-					success: function(data) {
-						console.log(data);
-						data = JSON.parse(data);
-						console.log(data);
-						if (data.status == 'success') {
-							Swal.fire({
-								title: 'Success!',
-								text: data.message,
-								icon: 'success',
-								confirmButtonText: 'Ok'
-							}).then((result) => {
-								if (result.isConfirmed) {
-									window.location.reload();
-								}
-							})
-						} else {
-							Swal.fire({
-								title: 'Error!',
-								text: data.message,
-								icon: 'error',
-								confirmButtonText: 'Ok'
-							})
-						}
+			form.append('function', 'UpdateProfile');
+			form.append('id', <?php echo $_SESSION['user_id']; ?>);
+			$.ajax({
+				url: '../include/functions.php',
+				type: 'POST',
+				data: form,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function(data) {
+					console.log(data);
+					data = JSON.parse(data);
+					console.log(data);
+					if (data.status == 'success') {
+						Swal.fire({
+							title: 'Success!',
+							text: data.message,
+							icon: 'success',
+							confirmButtonText: 'Ok'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.reload();
+							}
+						})
+					} else {
+						Swal.fire({
+							title: 'Error!',
+							text: data.message,
+							icon: 'error',
+							confirmButtonText: 'Ok'
+						})
 					}
-				});
-			} else {
-				Swal.fire({
-					title: 'Error!',
-					text: 'Please add skills',
-					icon: 'error',
-					confirmButtonText: 'Ok'
-				})
-				return false;
-			}
+				}
+			});
 
 		});
 	</script>
