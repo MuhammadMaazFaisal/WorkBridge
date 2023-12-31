@@ -342,7 +342,7 @@ include 'layout/footer.php';
                             <div class="task-offers">
                                 <strong>$${alldata.data[i].budget}</strong>
                             </div>
-                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
+                            <span class="button button-sliding-icon ripple-effect">Interested <i class="icon-material-outline-arrow-right-alt"></i></span>
                         </div>
                     </div>
                 </a>`;
@@ -511,7 +511,7 @@ include 'layout/footer.php';
                             <div class="task-offers">
                                 <strong>$${data.data[i].budget}</strong>
                             </div>
-                            <span class="button button-sliding-icon ripple-effect">Bid Now <i class="icon-material-outline-arrow-right-alt"></i></span>
+                            <span class="button button-sliding-icon ripple-effect">Interested <i class="icon-material-outline-arrow-right-alt"></i></span>
                         </div>
                     </div>
                 </a>`;

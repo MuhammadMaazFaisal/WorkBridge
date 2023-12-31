@@ -147,7 +147,7 @@ include 'layout/footer.php';
 			cache: false,
 			processData: false,
 			success: function(data) {
-				
+				console.log(data);
 				data = JSON.parse(data);
 				console.log(data);
 				if (data.status == 'success') {

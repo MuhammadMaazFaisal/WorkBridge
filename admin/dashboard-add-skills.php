@@ -266,11 +266,7 @@ if ($_SESSION['user_type'] == 'admin' && $_SESSION['status'] == 'logged_in') {
 							}
 						})
 					} else {
-						Swal.fire('Error', data.message, 'error').then((result) => {
-							if (result.isConfirmed) {
-								location.reload();
-							}
-						})
+						Swal.fire('Error', data.message, 'error');
 					}
 				}
 			});

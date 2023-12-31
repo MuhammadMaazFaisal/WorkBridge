@@ -177,7 +177,7 @@ include 'layout/header.php';
                 <div class="sidebar-widget">
                     <div class="bidding-widget">
                         <div class="bidding-headline">
-                            <h3 style="text-align: center;">Bid on this job!</h3>
+                            <h3 style="text-align: center;">Show Interest on this job!</h3>
                             <!-- Button -->
                             <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Interested</span></button>
                         </div>
@@ -293,6 +293,7 @@ include 'layout/footer.php';
         var url_string = window.location.href;
         var url = new URL(url_string);
         var id = url.searchParams.get("task_id");
+        var user_id = <?php echo $_SESSION['user_id']; ?>;
         
         
         $.ajax({
@@ -300,7 +301,8 @@ include 'layout/footer.php';
             type: "POST",
             data: {
                 id: id,
-                function: "GetTaskDetails"
+                function: "GetTaskDetails",
+                u_id: user_id
             },
             success: function(data) {
                 data = JSON.parse(data);
@@ -312,6 +314,9 @@ include 'layout/footer.php';
                 $("#attachment").attr("href", "images/" + data.data.upload);
                 for (var i = 0; i < data.skills.length; i++) {
                     $("#skills").append('<span>' + data.skills[i].name + '</span>');
+                }
+                if (data.bid != false && data.bid.status == "Interested") {
+                    $("#snackbar-place-bid").html("Already Interested");
                 }
             }
         });

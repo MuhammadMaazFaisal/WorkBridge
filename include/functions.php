@@ -65,13 +65,14 @@ if ($_POST['function'] == 'add-task') {
     AddCategory();
 } elseif ($_POST['function'] == 'GetAllUserSkills') {
     GetAllUserSkills();
-}elseif ($_POST['function'] == 'AddUserSkill') {
+} elseif ($_POST['function'] == 'AddUserSkill') {
     AddUserSkill();
-}elseif ($_POST['function'] == 'DeleteUserSkill') {
+} elseif ($_POST['function'] == 'DeleteUserSkill') {
     DeleteUserSkill();
 }
 
-function DeleteUserSkill(){
+function DeleteUserSkill()
+{
     include 'connection.php';
     $array = array();
     $sql = "DELETE FROM user_skills WHERE id=:id";
@@ -88,7 +89,8 @@ function DeleteUserSkill(){
     echo json_encode($array);
 }
 
-function AddUserSkill(){
+function AddUserSkill()
+{
     include 'connection.php';
     $array = array();
     $check_existing = "SELECT * FROM user_skills WHERE u_id=:u_id AND s_id=:s_id";
@@ -120,7 +122,8 @@ function AddUserSkill(){
     echo json_encode($array);
 }
 
-function GetAllUserSkills(){
+function GetAllUserSkills()
+{
     include 'connection.php';
     $array = array();
     $sql = "SELECT user_skills.*,skills.name as name, skills.id as skill_id FROM user_skills join skills on user_skills.s_id=skills.id WHERE u_id=:u_id";
@@ -144,6 +147,17 @@ function AddCategory()
 {
     include 'connection.php';
     $array = array();
+    $check_existing = "SELECT * FROM categories WHERE name=:name and status='active'";
+    $stmt_check_existing = $conn->prepare($check_existing);
+    $stmt_check_existing->bindParam(':name', $_POST['name']);
+    $stmt_check_existing->execute();
+    $result_check_existing = $stmt_check_existing->fetch(PDO::FETCH_ASSOC);
+    if ($result_check_existing) {
+        $array['status'] = 'error';
+        $array['message'] = 'Category already exists';
+        echo json_encode($array);
+        die();
+    }
     $sql = "INSERT INTO categories (name,status) VALUES (:name,'active')";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':name', $_POST['name']);
@@ -199,6 +213,17 @@ function AddSkill()
 {
     include 'connection.php';
     $array = array();
+    $check_existing = "SELECT * FROM skills WHERE name=:name and status='active'";
+    $stmt_check_existing = $conn->prepare($check_existing);
+    $stmt_check_existing->bindParam(':name', $_POST['name']);
+    $stmt_check_existing->execute();
+    $result_check_existing = $stmt_check_existing->fetch(PDO::FETCH_ASSOC);
+    if ($result_check_existing) {
+        $array['status'] = 'error';
+        $array['message'] = 'Skill already exists';
+        echo json_encode($array);
+        die();
+    }
     $sql = "INSERT INTO skills (name,category_id,status) VALUES (:name,:category_id,'active')";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':name', $_POST['name']);
@@ -538,43 +563,47 @@ function Login()
     $stmt->bindParam(':email', $_POST['email']);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result['status'] == 'inactive') {
+    if ($result == false) {
         $array['status'] = 'error';
-        $array['message'] = 'Your Account has been blocked!';
+        $array['message'] = 'Your are not registered!';
     } else {
-        if ($result) {
-            // If the user is found, check the password
-            if (password_verify($_POST['password'], $result['password'])) {
-                $sql1 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
-                $stmt1 = $conn->prepare($sql1);
-                $stmt1->bindParam(':u_id', $result['id']);
-                $stmt1->execute();
-                $skill = "User has no skills";
-                if ($stmt1->rowCount() > 0) {
-                    $skill = "User has skills";
-                }
-                $array['status'] = 'success';
-                $array['message'] = 'Login Success';
-                $array['user_type'] = $result['type'];
-                session_start();
-                $_SESSION['user_id'] = $result['id'];
-                $_SESSION['user_name'] = $result['name'];
-                $_SESSION['user_email'] = $result['email'];
-                $_SESSION['user_type'] = $result['type'];
-                $_SESSION['user_phone'] = $result['phone'];
-                $_SESSION['user_skill'] = $skill;
-                $_SESSION['status'] = 'logged_in';
-                $array['session'] = $_SESSION;
-            } else {
-                // Password is incorrect
-                $array['status'] = 'error';
-                $array['message'] = 'Invalid Password';
-            }
-        } else {
-            // If the user is not found, return an error message
+        if ($result['status'] == 'inactive') {
             $array['status'] = 'error';
-            $array['message'] = 'Invalid Email';
+            $array['message'] = 'Your Account has been blocked!';
+        } else {
+            if ($result) {
+                // If the user is found, check the password
+                if (password_verify($_POST['password'], $result['password'])) {
+                    $sql1 = "SELECT * FROM user_skills JOIN skills ON user_skills.s_id = skills.id WHERE u_id=:u_id";
+                    $stmt1 = $conn->prepare($sql1);
+                    $stmt1->bindParam(':u_id', $result['id']);
+                    $stmt1->execute();
+                    $skill = "User has no skills";
+                    if ($stmt1->rowCount() > 0) {
+                        $skill = "User has skills";
+                    }
+                    $array['status'] = 'success';
+                    $array['message'] = 'Login Success';
+                    $array['user_type'] = $result['type'];
+                    session_start();
+                    $_SESSION['user_id'] = $result['id'];
+                    $_SESSION['user_name'] = $result['name'];
+                    $_SESSION['user_email'] = $result['email'];
+                    $_SESSION['user_type'] = $result['type'];
+                    $_SESSION['user_phone'] = $result['phone'];
+                    $_SESSION['user_skill'] = $skill;
+                    $_SESSION['status'] = 'logged_in';
+                    $array['session'] = $_SESSION;
+                } else {
+                    // Password is incorrect
+                    $array['status'] = 'error';
+                    $array['message'] = 'Invalid Password';
+                }
+            } else {
+                // If the user is not found, return an error message
+                $array['status'] = 'error';
+                $array['message'] = 'Invalid Email';
+            }
         }
     }
 
@@ -873,11 +902,18 @@ function GetTaskDetails()
     $stmt1->bindParam(':id', $_POST['id']);
     $stmt1->execute();
     $result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    $check_user = "SELECT * FROM bids WHERE p_id=:p_id AND u_id=:u_id";
+    $stmt2 = $conn->prepare($check_user);
+    $stmt2->bindParam(':p_id', $_POST['id']);
+    $stmt2->bindParam(':u_id', $_POST['u_id']);
+    $stmt2->execute();
+    $result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
     if ($result) {
         $array['status'] = 'success';
         $array['message'] = 'Task Details Fetched Successfully';
         $array['data'] = $result;
         $array['skills'] = $result1;
+        $array['bid'] = $result2;
     } else {
         $array['status'] = 'error';
         $array['message'] = 'Task Details could not be Fetched';
@@ -1265,10 +1301,10 @@ function PlaceBid()
         $stmt->bindParam(':u_id', $_POST['u_id']);
         if ($stmt->execute()) {
             $array['status'] = 'success';
-            $array['message'] = "Bid Status Changed from " . $result0['status'] . " to " . ($result0['status'] == 'Interested' ? 'Not Interested' : 'Interested');
+            $array['message'] = "Status Changed from " . $result0['status'] . " to " . ($result0['status'] == 'Interested' ? 'Not Interested' : 'Interested');
         } else {
             $array['status'] = 'error';
-            $array['message'] = "Bid could not be placed, please try again.";
+            $array['message'] = "Something went wrong, please try again.";
         }
     } else {
         $sql = "INSERT INTO bids (p_id, u_id, status) VALUES (:p_id, :u_id, 'Interested')";
@@ -1277,10 +1313,10 @@ function PlaceBid()
         $stmt->bindParam(':u_id', $_POST['u_id']);
         if ($stmt->execute()) {
             $array['status'] = 'success';
-            $array['message'] = "Bid Placed Successfully";
+            $array['message'] = "Thanks for showing interest in this task.";
         } else {
             $array['status'] = 'error';
-            $array['message'] = "Bid could not be placed, please try again.";
+            $array['message'] = "Something went wrong, please try again.";
         }
     }
     echo json_encode($array);
